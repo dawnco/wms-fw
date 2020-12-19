@@ -4,7 +4,10 @@
  * @date   2020-12-08
  */
 return [
-    "db" => [
+    "env"       => "dev",
+    "log_dir"   => "",
+    "log_level" => "error",
+    "db"        => [
         "default" => [
             "driver"   => \wms\database\Mysqli::class,
             "hostname" => "8.129.34.119",
@@ -14,5 +17,6 @@ return [
             "port"     => 3306,
             "charset"  => "utf8mb4",
         ],
-    ]
+    ],
+
 ];

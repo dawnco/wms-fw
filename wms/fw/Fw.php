@@ -34,15 +34,14 @@ class Fw
 
     public function run()
     {
-
+        $response = new Response();
         try {
-            $this->exec();
+            $body = $this->exec();
+            $response->sendJson(0, null, $body);
+        } catch (Exception $e) {
+            $response->sendJson($e->getCode(), $e->getMessage());
         } catch (\Exception $e) {
-            echo "<pre>";
-            echo $e->getMessage();
-            echo "\r\n";
-            echo $e->getTraceAsString();
-            echo "</pre>";
+            $response->status(500)->send($e->getMessage());
         }
     }
 

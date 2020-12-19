@@ -17,7 +17,7 @@ class PortalControl
         $db   = Db::instance();
         $code = input("code");
         $data = $db->getData("SELECT code,`name`,price,`date` FROM product WHERE `code` = ? ORDER BY id DESC LIMIT 30", [$code]);
-        return json_encode($data);
+        return $data;
     }
 
     public function save()
@@ -36,7 +36,6 @@ class PortalControl
         ];
 
         $db->insert("product", $row);
-
 
     }
 }
