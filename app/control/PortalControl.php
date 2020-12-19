@@ -8,14 +8,12 @@ namespace app\control;
 
 
 use wms\fw\Db;
-use wms\fw\Exception;
 
 class PortalControl
 {
 
     public function index()
     {
-        throw new Exception("是是是", 100);
         $db   = Db::instance();
         $code = input("code");
         $data = $db->getData("SELECT code,`name`,price,`date` FROM product WHERE `code` = ? ORDER BY id DESC LIMIT 30", [$code]);
