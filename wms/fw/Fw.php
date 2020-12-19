@@ -66,9 +66,11 @@ class Fw
             throw new Exception($control . "->" . $method . "() Method Not Found");
         }
 
-        call_user_func_array(array($classInstance, $method), $param);
+        $body = call_user_func_array(array($classInstance, $method), $param);
 
         $this->hook->handle('after_control');
+
+        return $body;
 
     }
 
