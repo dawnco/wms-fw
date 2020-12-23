@@ -4,7 +4,7 @@
  * @date   2020-12-21
  */
 
-namespace app\exception;
+namespace App\exception;
 
 
 class NetworkException extends AppException

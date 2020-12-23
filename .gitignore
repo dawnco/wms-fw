@@ -3,3 +3,4 @@ node_modules
 app.conf.php
 .sass-cache
 runtime
+vendor

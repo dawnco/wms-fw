@@ -1,0 +1,19 @@
+{
+  "name": "dawnco/wumashi",
+  "description": "wumashi Fw",
+  "authors": [
+    {
+      "name": "dawnco",
+      "email": "abke@qq.com"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "src/Helper/function.php"
+    ],
+    "psr-4": {
+      "Wms\\": "src/",
+      "App\\": "App/"
+    }
+  }
+}

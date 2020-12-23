@@ -4,10 +4,10 @@
  * @date   2020-12-21
  */
 
-namespace app\exception;
+namespace App\exception;
 
 
-use wms\fw\Exception;
+use Wms\Fw\Exception;
 
 class AppException extends Exception
 {

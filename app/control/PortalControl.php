@@ -4,10 +4,10 @@
  * @date   2020-12-08
  */
 
-namespace app\control;
+namespace App\Control;
 
 
-use wms\fw\Db;
+use Wms\Fw\Db;
 
 class PortalControl
 {
