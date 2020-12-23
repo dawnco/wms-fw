@@ -2,3 +2,4 @@ node_modules
 .idea
 app.conf.php
 .sass-cache
+runtime

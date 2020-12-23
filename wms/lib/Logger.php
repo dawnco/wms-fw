@@ -23,7 +23,7 @@ class Logger
     private function __construct($loggerName = "")
     {
         $this->loggerName = $loggerName;
-        $this->dir        = Conf::get('app.log_dir') ?: "/tmp";
+        $this->dir        = Conf::get('app.log_dir') ?: (ROOT_PATH . "/runtime/log");
         $level            = [
             'debug'   => 1,
             'info'    => 2,

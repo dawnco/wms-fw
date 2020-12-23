@@ -10,10 +10,10 @@ return [
     "db"        => [
         "default" => [
             "driver"   => \wms\database\Mysqli::class,
-            "hostname" => "8.129.34.119",
-            "username" => "backend",
-            "password" => "@vLvXFqdUo#rCB#hkHT5IgkA",
-            "database" => "loan_market_v2",
+            "hostname" => "127.0.0.1",
+            "username" => "root",
+            "password" => "root",
+            "database" => "test",
             "port"     => 3306,
             "charset"  => "utf8mb4",
         ],
