@@ -18,11 +18,3 @@ app/conf/app.conf.php
 ```
 php shell.php test
 ```
-
-开发完后 
-```
-composer install
-```
-
-composer 介绍
-https://my.oschina.net/codespring/blog/852063

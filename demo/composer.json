@@ -1,0 +1,13 @@
+{
+  "require": {
+    "dawnco/wms-fw": "^1.2"
+  },
+  "autoload": {
+    "files": [
+      "App/Helper/function.php"
+    ],
+    "psr-4": {
+      "App\\": "App/"
+    }
+  }
+}
