@@ -9,11 +9,10 @@
   ],
   "autoload": {
     "files": [
-      "src/Helper/function.php",
+      "src/Helper/function.php"
     ],
     "psr-4": {
-      "Wms\\": "src/",
-      "App\\": "App/"
+      "Wms\\": "src/"
     }
   }
 }
