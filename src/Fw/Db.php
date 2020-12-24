@@ -22,8 +22,8 @@ class Db
     public static function instance($conf = 'default')
     {
         if (!isset(self::$instance[$conf])) {
-            $option                = Conf::get("App.db.$conf");
-            $type                  = isset($option['driver']) ? $option['driver'] : "\\wms\\database\\Mysqli";
+            $option                = Conf::get("app.db.$conf");
+            $type                  = isset($option['driver']) ? $option['driver'] : "\\Wms\\Database\\Mysqli";
             self::$instance[$conf] = new $type($option);
         }
         return self::$instance[$conf];

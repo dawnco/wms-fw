@@ -70,28 +70,26 @@ function get_client_ip()
     return !empty($realip[0]) ? $realip[0] : '0.0.0.0';
 }
 
-/**
- * 获取请求的host
- * @return string
- */
-function get_request_host()
-{
-    return (empty($_SERVER['HTTPS']) ? "http://" : "https://") . $_SERVER['HTTP_HOST'];
-}
-
 function dump(...$args)
 {
 
     $args = func_get_args();
 
-    if (IS_CLI) {
-        echo " \033[32;40m";
-    }
+    //if (IS_CLI) {
+    //    echo " \033[32;40m";
+    //}
     foreach ($args as $v) {
         var_dump($v);
     }
-    if (IS_CLI) {
-        echo "\033[0m ";
-    }
+    //if (IS_CLI) {
+    //    echo "\033[0m ";
+    //}
     exit;
+}
+
+function shell_log($msg, ...$param)
+{
+    echo date("Y-m-d H:i:s ");
+    echo vsprintf($msg, $param);
+    echo "\n";
 }

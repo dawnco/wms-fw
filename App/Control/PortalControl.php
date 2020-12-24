@@ -16,7 +16,7 @@ class PortalControl
     {
         $db   = Db::instance();
         $code = input("code");
-        $data = $db->getData("SELECT code,`name`,price,`date` FROM product WHERE `code` = ? ORDER BY id DESC LIMIT 30", [$code]);
+        $data = $db->getData("SELECT * FROM product WHERE `code` = ? ORDER BY id DESC LIMIT 30", [$code]);
         return $data;
     }
 

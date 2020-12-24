@@ -4,7 +4,7 @@
  * @date   2020-05-09
  */
 
-namespace Wms\database;
+namespace Wms\Database;
 
 
 use Wms\Fw\Exception;

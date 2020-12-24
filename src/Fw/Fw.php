@@ -68,8 +68,10 @@ class Fw
 
     }
 
-    public function shell()
+    public function shell($argv)
     {
+        $name = $argv[1];
+        include APP_PATH . "/Shell/" . $name . ".shell.php";
     }
 
     public function hook()

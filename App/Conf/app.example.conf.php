@@ -9,7 +9,7 @@ return [
     "log_level" => "error", // 日志登录  debug info  warning error
     "db"        => [
         "default" => [
-            "driver"   => \wms\database\Mysqli::class,
+            "driver"   => \Wms\Database\Mysqli::class,
             "hostname" => "127.0.0.1",
             "username" => "root",
             "password" => "root",

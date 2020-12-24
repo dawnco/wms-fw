@@ -14,7 +14,7 @@ require $dir . "/vendor/autoload.php";
 
 define("APP_PATH", dirname(__DIR__));
 
-Conf::set('App', include APP_PATH . "/Conf/app.conf.php");
+Conf::set('app', include APP_PATH . "/Conf/app.conf.php");
 Conf::set('route', include APP_PATH . "/Conf/route.conf.php");
 $fw = new Fw();
 $fw->run();

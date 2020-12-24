@@ -2,6 +2,8 @@
 
 
 
+
+
 # WMS Framework
 
 配置在 参考  app.example.conf
@@ -14,7 +16,11 @@ app/conf/app.conf.php
 \wms\lib\Log::debug("%s log", "name");
 ```
 
+# 使用shell 例子
 
+```
+php shell.php test
+```
 
 开发完后 
 ```

@@ -4,3 +4,4 @@ app.conf.php
 .sass-cache
 runtime
 vendor
+composer.lock
