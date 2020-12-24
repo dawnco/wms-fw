@@ -1,6 +1,6 @@
 {
-  "name": "dawnco/wumashi",
-  "description": "wumashi Fw",
+  "name": "dawnco/wms-fw",
+  "description": "wms sample php framework",
   "authors": [
     {
       "name": "dawnco",

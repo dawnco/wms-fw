@@ -1,10 +1,7 @@
 
+# wms sample php framework
 
-
-
-
-
-# WMS Framework
+例子参考 App目录
 
 配置在 参考  app.example.conf
 ```
