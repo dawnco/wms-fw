@@ -1,6 +1,11 @@
-
 # wms sample php framework
 
+## 安装
+```
+composer require dawnco/wms-fw
+```
+
+## 参考
 例子参考 App目录
 
 配置在 参考  app.example.conf

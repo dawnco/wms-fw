@@ -59,12 +59,12 @@ class Mysqli extends Database implements IDatabase
         $result = $this->exec($query);
 
         if (!$result) {
-            return false;
+            return null;
         }
         $row = $result->fetch_assoc();
         $result->free();
 
-        return $row;
+        return $row ?: null;
     }
 
     /**
@@ -114,7 +114,7 @@ class Mysqli extends Database implements IDatabase
      */
     public function getData($query, $bind = null)
     {
-        $data = array();
+        $data = [];
 
         $query  = $this->prepare($query, $bind);
         $result = $this->exec($query, $this->link);
@@ -138,15 +138,15 @@ class Mysqli extends Database implements IDatabase
      */
     public function insert($table, $data)
     {
-        $insert_fileds = array();
+        $insert_fields = array();
         $insert_data   = array();
         foreach ($data as $field => $value) {
-            array_push($insert_fileds, "`{$field}`");
-            array_push($insert_data, '"' . $this->escape($value) . '"');
+            $insert_fields[] = "`{$field}`";
+            $insert_data[]   = '"' . $this->escape($value) . '"';
         }
-        $insert_fileds = implode(', ', $insert_fileds);
+        $insert_fields = implode(', ', $insert_fields);
         $insert_data   = implode(', ', $insert_data);
-        $query         = "INSERT INTO `{$table}` ({$insert_fileds}) values ({$insert_data});";
+        $query         = "INSERT INTO `{$table}` ({$insert_fields}) values ({$insert_data});";
         $result        = $this->exec($query);
 
         if ($result) {
@@ -180,25 +180,25 @@ class Mysqli extends Database implements IDatabase
      */
     public function insertBatch($table, $data)
     {
-        $insert_fileds = array();
+        $insert_fields = array();
         foreach ($data as $value) {
             foreach ($value as $field => $row) {
-                array_push($insert_fileds, "`{$field}`");
+                $insert_fields[] = "`{$field}`";
             }
             break;
         }
-        $insert_fileds = implode(', ', $insert_fileds);
+        $insert_fields = implode(', ', $insert_fields);
 
 
         foreach ($data as $field => $value) {
             $insert_data = array();
             foreach ($value as $row) {
-                array_push($insert_data, '"' . $this->escape($row) . '"');
+                $insert_data[] = '"' . $this->escape($row) . '"';
             }
             $insert_data_str[] = "(" . implode(', ', $insert_data) . ")";
         }
 
-        $query  = "INSERT INTO `{$table}` ({$insert_fileds}) values " . implode(",", $insert_data_str) . ";";
+        $query  = "INSERT INTO `{$table}` ({$insert_fields}) values " . implode(",", $insert_data_str) . ";";
         $result = $this->exec($query);
         return $result;
     }
@@ -210,25 +210,25 @@ class Mysqli extends Database implements IDatabase
      */
     public function insertIgnoreBatch($table, $data)
     {
-        $insert_fileds = array();
+        $insert_fields = array();
         foreach ($data as $value) {
             foreach ($value as $field => $row) {
-                array_push($insert_fileds, "`{$field}`");
+                $insert_fields[] = "`{$field}`";
             }
             break;
         }
-        $insert_fileds = implode(', ', $insert_fileds);
+        $insert_fields = implode(', ', $insert_fields);
 
 
         foreach ($data as $field => $value) {
             $insert_data = array();
             foreach ($value as $row) {
-                array_push($insert_data, '"' . $this->escape($row) . '"');
+                $insert_data[] = '"' . $this->escape($row) . '"';
             }
             $insert_data_str[] = "(" . implode(', ', $insert_data) . ")";
         }
 
-        $query  = "INSERT IGNORE INTO `{$table}` ({$insert_fileds}) values " . implode(",", $insert_data_str) . ";";
+        $query  = "INSERT IGNORE INTO `{$table}` ({$insert_fields}) values " . implode(",", $insert_data_str) . ";";
         $result = $this->exec($query);
         return $result;
     }
@@ -326,13 +326,13 @@ class Mysqli extends Database implements IDatabase
         $update_data  = array();
         $update_where = array();
         foreach ($data as $field => $value) {
-            array_push($update_data, sprintf('`%s` = "%s"', $field, $this->escape($value)));
+            $update_data[] = sprintf('`%s` = "%s"', $field, $this->escape($value));
         }
         $update_data = implode(', ', $update_data);
 
         if (is_array($where)) {
             foreach ($where as $field => $value) {
-                array_push($update_where, sprintf('`%s` = "%s"', $field, $this->escape($value)));
+                $update_where[] = sprintf('`%s` = "%s"', $field, $this->escape($value));
             }
             $update_where = 'WHERE ' . implode(' AND ', $update_where);
         } elseif (is_numeric($where)) {
@@ -351,7 +351,7 @@ class Mysqli extends Database implements IDatabase
         if (is_array($where)) {
             $delete_where = array();
             foreach ($where as $field => $value) {
-                array_push($delete_where, sprintf('`%s` = "%s"', $field, $this->escape($value)));
+                $delete_where[] = sprintf('`%s` = "%s"', $field, $this->escape($value));
             }
             $delete_where = 'WHERE ' . implode(' AND ', $delete_where);
         } elseif (is_numeric($where)) {
