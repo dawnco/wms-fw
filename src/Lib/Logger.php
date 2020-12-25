@@ -23,14 +23,14 @@ class Logger
     private function __construct($loggerName = "")
     {
         $this->loggerName = $loggerName;
-        $this->dir        = Conf::get('App.log_dir') ?: (ROOT_PATH . "/runtime/log");
+        $this->dir        = Conf::get('app.log_dir') ?: (APP_PATH . "/Runtime");
         $level            = [
             'debug'   => 1,
             'info'    => 2,
             'warning' => 3,
             'error'   => 4,
         ];
-        $this->level      = $level[Conf::get('App.log_level')] ?? 1;
+        $this->level      = $level[Conf::get('app.log_level')] ?? 1;
     }
 
     /**
@@ -78,7 +78,7 @@ class Logger
         $str = date("Y-m-d H:i:s") . " [$level] " . $msg . "\n";
 
         $file = implode("", [$this->dir, "/", $this->loggerName, "-", $level, date("-Y-m-d"), ".log"]);
-
+   
         file_put_contents($file, $str, FILE_APPEND);
     }
 }
