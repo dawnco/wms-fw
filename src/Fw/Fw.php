@@ -32,7 +32,7 @@ class Fw
         try {
             $body = $this->exec();
             $response->sendJson(0, null, $body);
-        } catch (Exception $e) {
+        } catch (WmsException $e) {
             $response->sendJson($e->getCode(), $e->getMessage());
         } catch (\Exception $e) {
             $response->status(500)->send($e->getMessage());
@@ -51,13 +51,13 @@ class Fw
         $method  = $this->route->getMethod();
         $param   = $this->route->getParam();
         if (!class_exists($control)) {
-            throw new Exception($control . " File Not Found");
+            throw new WmsException($control . " File Not Found");
         }
 
         $classInstance = new $control();
 
         if (!method_exists($classInstance, $method)) {
-            throw new Exception($control . "->" . $method . "() Method Not Found");
+            throw new WmsException($control . "->" . $method . "() Method Not Found");
         }
 
         $body = call_user_func_array(array($classInstance, $method), $param);

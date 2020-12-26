@@ -7,9 +7,9 @@
 namespace App\exception;
 
 
-class NetworkException extends AppException
+class AuthException extends AppException
 {
-    public function __construct($message = '', $code = 503, $previous = null)
+    public function __construct($message = '', $code = 401, $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

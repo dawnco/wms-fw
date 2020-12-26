@@ -5,27 +5,24 @@
  */
 
 /**
- * @param type $key
- * @param type $val_type 转换类型 i 整型  s 字符串  a 数组  默认不转换
- * @return type
+ * @param  $key
+ * @param  $default
+ * @return mixed
  */
-function input($key, $val_type = "s")
+function input($key = null, $default = null)
 {
-    $val = isset($_POST[$key]) ? $_POST[$key] :
-        (isset($_GET[$key]) ? $_GET[$key] : false);
+    if ($key === null) {
+        $val = $_POST ?: ($_GET ?: $default);
+    } else {
+        $val = $_POST[$key] ?? ($_GET[$key] ?? $default);
+    }
 
-
-    switch ($val_type) {
-        case "i":
-            $val = (int)$val;
-        break;
-        case "a" :
-            $val = $val ? (array)$val : array();
-        break;
-        default :
-            $val = (string)$val;
-            $val = trim($val);
-        break;
+    if (is_array($val)) {
+        foreach ($val as $k => $v) {
+            $val[$k] = trim($v);
+        }
+    } else {
+        $val = trim($val);
     }
 
     return $val;

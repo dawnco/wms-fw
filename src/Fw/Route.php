@@ -42,7 +42,7 @@ class Route
                 return null;
             }
         }
-        throw new Exception("no route match : $uri");
+        throw new WmsException("no route match : $uri", 404);
     }
 
     private function parseUri()

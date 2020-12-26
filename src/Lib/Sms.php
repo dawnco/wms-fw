@@ -7,7 +7,7 @@
 namespace Wms\Lib;
 
 use app\dict\ErrorCode;
-use Wms\Fw\Exception;
+use Wms\Fw\WmsException;
 
 class Sms
 {
@@ -26,20 +26,20 @@ class Sms
     {
 
         if (!$phone) {
-            throw new Exception("mobile number is need", ErrorCode::SMS_SEND_ERROR);
+            throw new WmsException("mobile number is need", ErrorCode::SMS_SEND_ERROR);
         }
 
         $redis = Redis::getInstance();
         $last  = $redis->get('sms:last:' . $phone);
         $now   = time();
         if ($last && $now - $last < self::SEND_NEXT_TIME) {
-            throw new Exception(sprintf("Sending too frequently, retrying after %d seconds!", self::SEND_NEXT_TIME), ErrorCode::SMS_SEND_ERROR);
+            throw new WmsException(sprintf("Sending too frequently, retrying after %d seconds!", self::SEND_NEXT_TIME), ErrorCode::SMS_SEND_ERROR);
         }
 
         // 同一个手机号每天发送限制发送10条短信
         $times = $redis->get('sms:stat:' . date("d", $now) . ":" . $phone);
         if ($times > self::SEND_MAX_DAY) {
-            throw new Exception("The number of SMS messages for this mobile phone number has reached the upper limit today!", ErrorCode::SMS_SEND_ERROR);
+            throw new WmsException("The number of SMS messages for this mobile phone number has reached the upper limit today!", ErrorCode::SMS_SEND_ERROR);
         }
 
         //生成验证码

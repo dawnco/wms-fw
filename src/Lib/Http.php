@@ -3,7 +3,7 @@
 namespace Wms\Lib;
 
 use app\dict\ErrorCode;
-use Wms\Fw\Exception;
+use Wms\Fw\WmsException;
 
 /**
  * @author  Dawnc
@@ -58,7 +58,7 @@ class Http
         curl_close($ch);
 
         if ($output === false || $httpStatus != 200) {
-            throw new Exception("network error httpStatus: $httpStatus: error: $error url: $url", ErrorCode::NETWORK_ERROR);
+            throw new WmsException("network error httpStatus: $httpStatus: error: $error url: $url", ErrorCode::NETWORK_ERROR);
         }
 
         return $output;

@@ -4,13 +4,16 @@
  * @date   2020-12-08
  */
 
+$dir = dirname(dirname(dirname(__DIR__)));
+require $dir . "/vendor/autoload.php";
+
+require dirname(dirname(__DIR__)) . "/vendor/autoload.php";
+
+
 use Wms\Fw\Conf;
 use Wms\Fw\Fw;
 
-
-$dir = dirname(dirname(__DIR__));
-
-require $dir . "/vendor/autoload.php";
+$GLOBALS['REQUEST_METHOD'] = strtoupper($_SERVER['REQUEST_METHOD']);
 
 define("APP_PATH", dirname(__DIR__));
 

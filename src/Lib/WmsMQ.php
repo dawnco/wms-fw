@@ -10,7 +10,7 @@ namespace Wms\Lib;
 
 
 use Wms\Fw\Conf;
-use Wms\Fw\Exception;
+use Wms\Fw\WmsException;
 
 class WmsMQ
 {
@@ -39,7 +39,7 @@ class WmsMQ
         $key   = self::key($name);
 
         if ($size == 1) {
-            throw  new Exception("queue size must greater than 1");
+            throw  new WmsException("queue size must greater than 1");
         }
 
         $script = <<<EOT

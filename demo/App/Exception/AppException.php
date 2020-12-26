@@ -7,12 +7,12 @@
 namespace App\exception;
 
 
-use Wms\Fw\Exception;
+use Wms\Fw\WmsException;
 
-class AppException extends Exception
+class AppException extends WmsException
 {
 
-    public function __construct($message, $code = -1, $previous = null)
+    public function __construct($message, $code = 500, $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

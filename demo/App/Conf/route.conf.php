@@ -9,4 +9,6 @@ return [
     //"portal" => ["c" => \App\control\Portal::class, "m" => "index"],
     "product"      => ["c" => \App\Control\PortalControl::class, "m" => "index"],
     "product/save" => ["c" => \App\Control\PortalControl::class, "m" => "save"],
+    "(\w+)"        => ["c" => \App\Control\TableControl::class],
+    "(\w+)/(\d+)"  => ["c" => \App\Control\TableControl::class],
 ];

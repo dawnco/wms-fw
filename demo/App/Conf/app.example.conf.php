@@ -4,12 +4,13 @@
  * @date   2020-12-08
  */
 return [
-    "env"       => "dev",   // 环境 dev 开发  production 生产
-    "log_dir"   => "",      // 日志目录
-    "log_level" => "error", // 日志登录  debug info  warning error
-    "db"        => [
+    "env" => "dev",   // 环境 dev 开发  production 生产
+    "log" => [
+        'level' => "error", // 日志登录  debug info  warning error
+        'dir'   => "", // 日志目录
+    ],
+    "db"  => [
         "default" => [
-            "driver"   => \Wms\Database\Mysqli::class,
             "hostname" => "127.0.0.1",
             "username" => "root",
             "password" => "root",

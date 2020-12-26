@@ -8,16 +8,16 @@ namespace Wms\Fw;
 
 use Wms\Lib\Log;
 
-class Exception extends \Exception
+class WmsException extends \Exception
 {
 
     protected $data = null;
 
-    public function __construct($message, $code = -1, $previous = null)
+    public function __construct($message, $code = 500, $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
-        Log::info("Exception Code:%s Message: %s",
+        Log::info("WmsException Code:%s Message: %s",
             $this->getCode(),
             $this->getMessage());
 

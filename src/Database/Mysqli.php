@@ -7,7 +7,7 @@
 namespace Wms\Database;
 
 
-use Wms\Fw\Exception;
+use Wms\Fw\WmsException;
 
 class Mysqli extends Database implements IDatabase
 {
@@ -41,7 +41,7 @@ class Mysqli extends Database implements IDatabase
         $this->link->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, true);
         $isConnect = $this->link->real_connect($hostname, $username, $password, $database, $port);
         if (!$isConnect) {
-            throw new Exception("database connect error: $hostname $database");
+            throw new WmsException("database connect error: $hostname $database");
         }
         $this->link->set_charset($charset);
     }
@@ -338,7 +338,7 @@ class Mysqli extends Database implements IDatabase
         } elseif (is_numeric($where)) {
             $update_where = 'WHERE ' . $this->prepare("id = ?i", $where);
         } else {
-            throw new Exception("Db Not Specified Where", 500);
+            throw new WmsException("Db Not Specified Where", 500);
         }
         $query = "UPDATE `{$table}` SET {$update_data} {$update_where}";
 
@@ -357,7 +357,7 @@ class Mysqli extends Database implements IDatabase
         } elseif (is_numeric($where)) {
             $delete_where = 'WHERE ' . $this->prepare("id = ?i", $where);
         } else {
-            throw new Exception("Db Not Specified Where", 500);
+            throw new WmsException("Db Not Specified Where", 500);
         }
 
         $query = "DELETE FROM `$table` $delete_where";
@@ -375,7 +375,7 @@ class Mysqli extends Database implements IDatabase
         $result = $this->link->query($query);
         if ($result === false) {
             $error = sprintf("%s : %s [%s]", $this->link->errno, $this->link->error, $query);
-            throw new Exception($error);
+            throw new WmsException($error);
         }
         $end         = microtime(true);
         $this->sql[] = "[" . substr(($end - $start) * 1000, 0, 5) . "ms] " . $query;
