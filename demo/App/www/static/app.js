@@ -1,4 +1,5 @@
-﻿const store = new Vuex.Store({
+﻿
+const store = new Vuex.Store({
   state: {
     count: 0
   },
@@ -13,6 +14,9 @@ Vue.component('component-demo', {
   props: [
     'name'
   ],
+  created () {
+    this.$request.get('/')
+  },
   data () {
     return {
       desc: '这是一个组件的属性'
@@ -24,8 +28,6 @@ Vue.component('component-demo', {
 <div>{{desc}}</div>
 </div>`
 })
-
-
 
 const app = new Vue({
   router

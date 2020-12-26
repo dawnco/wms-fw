@@ -26,7 +26,7 @@
 
 // 创建一个 axios 实例
   const service = axios.create({
-    baseURL: '/admin',
+    baseURL: '/',
     timeout: 5000 // 请求超时时间
   })
 
@@ -70,7 +70,7 @@
             // 没有登录
             // [ 示例 ] 其它和后台约定的 code
             errorCreate('没有权限')
-            window.location.href = '#/login'
+            app.$router.push({ path: '/login' })
             break
           case 503:
             // 没有登录
@@ -131,6 +131,4 @@
   )
 
   Vue.prototype.$request = service
-
-  console.log(Vue.prototype.$message('x'))
 })()

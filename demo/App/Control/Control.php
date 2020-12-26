@@ -22,8 +22,6 @@ class Control
     {
         $this->method = $GLOBALS['REQUEST_METHOD'] ?? 'GET';
         $this->db     = Db::instance();
-
-
     }
 
     public function index()
