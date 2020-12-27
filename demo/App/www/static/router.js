@@ -1,13 +1,4 @@
 ﻿// 可以从其他文件 import 进来
-const Home = {
-  template: '<div>Home</div>',
-  created () {
-    this.$request.get('/xx')
-  }
-}
-const Foo = { template: `<div>foo</div>` }
-const Bar = { template: '<div>bar</div>' }
-const Login = { template: '<div>login</div>' }
 
 // 2. 定义路由
 // 每个路由应该映射一个组件。 其中"component" 可以是
@@ -17,8 +8,7 @@ const Login = { template: '<div>login</div>' }
 const routes = [
   { path: '/', component: Home },
   { path: '/login', component: Login },
-  { path: '/foo', component: Foo },
-  { path: '/bar', component: Bar }
+  { path: '*', component: NotFound }
 ]
 
 // 3. 创建 router 实例，然后传 `routes` 配置
