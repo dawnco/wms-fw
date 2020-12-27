@@ -27,7 +27,6 @@ fs.readdir(pathName, function (err, files) {
 
   fs.writeFileSync('index.html', str)
 
-  let js = fs.readFileSync('./static/router.js', 'utf8')
 
   let str2 = 'const routes = [\n  ' +
              routeFiles.join(',\n  ') +
