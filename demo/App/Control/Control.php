@@ -7,10 +7,19 @@
 namespace App\Control;
 
 
+use App\Lib\Token;
 use Wms\Fw\Db;
+use Wms\Lib\Redis;
 
 class Control
 {
+
+    /**
+     * @var Token
+     */
+    protected $token;
+
+
     /**
      * @var \wms\database\Mysqli
      */
@@ -22,6 +31,8 @@ class Control
     {
         $this->method = $GLOBALS['REQUEST_METHOD'] ?? 'GET';
         $this->db     = Db::instance();
+        $this->token = new Token(Redis::getInstance(), $_SERVER['X-TOKEN'] ?? '');
+
     }
 
     public function index()

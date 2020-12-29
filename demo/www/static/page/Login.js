@@ -50,6 +50,8 @@ const Login = {
       console.log(this.fromData)
       this.$request.post('/login', this.fromData).then(r => {
         this.$store.commit('logged', r.token)
+        this.$tip.success('登录成功')
+        this.$router.push({ path: '/home' })
       }).finally(r => {
         this.loading = false
       })

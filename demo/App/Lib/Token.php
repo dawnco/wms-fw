@@ -7,13 +7,13 @@
 namespace App\Lib;
 
 
-use Wms\Lib\Redis;
-
 class Token
 {
 
     private $key;
     private $expire = 3600;
+
+    private $prefix = "TOKEN:";
     /**
      * @var \Redis
      */
@@ -21,7 +21,7 @@ class Token
 
     public function __construct($redis, $key)
     {
-        $this->key = "TOKEN:" . $key;
+        $this->key = $this->prefix . $key;
 
 
         $this->redis = $redis;
@@ -45,7 +45,14 @@ class Token
     {
         $this->redis->hSet($this->key, $key, $val);
         return $this;
+    }
 
+    public function get($key)
+    {
+        if ($this->key == $this->prefix) {
+            return null;
+        }
+        return $this->redis->hGet($this->key, $key) ?: null;
     }
 
     public function del($key)
@@ -54,9 +61,14 @@ class Token
         return $this;
     }
 
+    public function getTokenKey()
+    {
+        return str_replace($this->prefix, "", $this->key);
+    }
+
     private function sid()
     {
-        return md5(uniqid() + time());
+        return md5(uniqid() . time());
     }
 
 }

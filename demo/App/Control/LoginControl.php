@@ -8,13 +8,18 @@ namespace App\Control;
 
 use App\Dict\Dict;
 use App\Exception\AppException;
+use App\Lib\Token;
 use Wms\Fw\Db;
+use Wms\Lib\Redis;
 
 class LoginControl
 {
+    protected $token;
+
     public function __construct()
     {
-        $this->db = Db::instance();
+        $this->db    = Db::instance();
+        $this->token = new Token(Redis::getInstance(), $_SERVER['X-TOKEN'] ?? '');
     }
 
     public function index()
@@ -36,7 +41,7 @@ class LoginControl
 
         if (password_verify($password, $admin['password'])) {
 
-            $token = Session::new($admin);
+            $token = $this->token->new($admin)->getTokenKey();
 
             return [
                 "token"    => $token,
