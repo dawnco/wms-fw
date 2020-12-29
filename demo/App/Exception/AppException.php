@@ -4,7 +4,7 @@
  * @date   2020-12-21
  */
 
-namespace App\exception;
+namespace App\Exception;
 
 
 use Wms\Fw\WmsException;

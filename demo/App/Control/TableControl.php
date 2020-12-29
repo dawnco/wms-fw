@@ -7,7 +7,7 @@
 namespace App\Control;
 
 
-use App\exception\AuthException;
+use App\Exception\AuthException;
 use App\Model\Model;
 
 class TableControl

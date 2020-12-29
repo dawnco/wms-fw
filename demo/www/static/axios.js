@@ -4,6 +4,19 @@
  */
 (function () {
 
+  // https://locutus.io/php/url/urlencode/
+  function urlencode (str) {
+    str = (str + '')
+    return encodeURIComponent(str)
+    .replace(/!/g, '%21')
+    .replace(/'/g, '%27')
+    .replace(/\(/g, '%28')
+    .replace(/\)/g, '%29')
+    .replace(/\*/g, '%2A')
+    .replace(/~/g, '%7E')
+    .replace(/%20/g, '+')
+  }
+
   // 创建一个错误
   function errorCreate (msg) {
     const error = new Error(msg)
@@ -37,6 +50,20 @@
       // const token = util.cookies.get('token')
       // // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
       // config.headers['X-Token'] = token
+      config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+      config.headers['X-Token'] =  window.localStorage.getItem('X-Token') || ''
+
+      config.transformRequest = [function (data) {
+
+        let raw = new Array()
+        for (let i in data) {
+          raw.push( i + "=" + urlencode(data[i]))
+        }
+        return raw.join("&")
+
+      }]
+
+
 
       return config
     },
@@ -68,14 +95,14 @@
             return dataAxios.data
           case 401:
             // 没有登录
-            // [ 示例 ] 其它和后台约定的 code
+            router.push({ path: '/login' })
             errorCreate('没有权限')
-            app.$router.push({ path: '/login' })
             break
           case 503:
-            // 没有登录
-            // [ 示例 ] 其它和后台约定的 code
             errorCreate('网络错误')
+            break
+          case 404:
+            errorCreate('页面不存在')
             break
           default:
             // 不是正确的 code

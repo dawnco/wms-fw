@@ -23,7 +23,7 @@ class Redis
         $key = md5(serialize($conf));
         if (!isset(self::$__instance[$key])) {
             if ($conf == null) {
-                $conf = Conf::get("db.redis");
+                $conf = Conf::get("app.redis.default");
             }
             self::$__instance[$key] = new \Redis();
             self::$__instance[$key]->connect($conf['hostname'], $conf['port']);
