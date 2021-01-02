@@ -1,5 +1,5 @@
-const Home = {
-  template: `<div>
+<template>
+  <div>
 <router-link to="/foo">Go to Foo</router-link>
   <router-link to="/bar">Go to Bar</router-link>
     <el-button @click="loadData">Button</el-button>
@@ -27,7 +27,10 @@ const Home = {
   </div>
   <component-demo name="组件名称">
     这是slot
-  </component-demo></div>`,
+  </component-demo></div>
+</template>
+<script>
+export default {
   created () {
     this.loadData()
   },
@@ -56,4 +59,4 @@ const Home = {
     }
   }
 }
-const Foo = { template: `<div>foo</div>` }
+</script>
