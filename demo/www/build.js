@@ -166,7 +166,7 @@ function check (dir) {
 
 }
 
-check(dir + '/static/temp')
+check(dir + '/static/component')
 check(dir + '/static/page')
 
 vuePage(dir)
