@@ -14,6 +14,14 @@ var fs = require('fs')
 
 var dir = __dirname.replace(/\\/g, '/')
 
+const  Util = {
+    trim(str){
+        return str.replace(/(^\s*)|(\s*$)/sg, "");
+    }
+        
+    
+}
+
 function msg (msg) {
   console.log(msg)
 }
@@ -62,24 +70,42 @@ function vue2js (dir) {
 
 
   for (let i = 0; i < files.length; i++) {
-    let file = dirname + '/' + files[i]
+    let fileMame = files[i].replace(".vue", "")
+    let file = dirname + '/' + fileMame + ".vue"
     let content = fs.readFileSync(file, 'utf8')
 
     let match1 = /<template>(.+)<\/template>/gs.exec(content)
     let tpl = match1[1]
-    console.log(tpl)
+  
 
     let match2 = /<script>(.+)<\/script>/gs.exec(content)
+    if(match2 == null){
+        console.log(file + " has  no script")
+    }
     let js = match2[1]
-    let o = eval(js)
-    console.log(o)
 
 
+    let jsFile = dir + "/static/page/" + fileMame + ".js"
+    
+    js = Util.trim(js)
+    js = js.replace("export default {", `const ${fileMame} = {\n  template: \`${tpl}\`,`);
+    
+    fs.writeFileSync(jsFile, js)
 
 
   }
 
 }
 
-// tplAndRoute(dir)
+function check(dir){
+   let stat = fs.existsSync(dir)
+   if(!stat){
+    fs.mkdirSync(dir, 0755)
+   }
+
+}
+check(dir + "/static/temp")
+check(dir + "/static/page")
+
 vue2js(dir)
+tplAndRoute(dir)
