@@ -1,20 +1,46 @@
 html, body {
     padding: 0;
     margin: 0;
+    height: 100%;
+}
+#app{
+    height: 100%;
+    overflow: hidden;
 }
 
 .layout {
     display: flex;
+    height: 100%;
 }
 
 .layout-left {
-    width: 150px;
-    border: 1px solid red;
+    flex: none;
+    width: 180px;
 }
 
 .layout-right {
-    flex: 1;
-    border: 1px solid #CCCCCC;
+    flex: auto;
     padding: 10px;
     height: 100%;
+    overflow: auto;
+}
+
+.container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.container > .body{
+    flex: auto;
+
+}
+
+.container > .search{
+    flex: none;
+}
+
+.container > .pagination{
+    flex: none;
+    padding-bottom: 30px;
 }

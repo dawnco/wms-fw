@@ -1,7 +1,11 @@
-Vue.component('custom-demo', {
-  template: `<div>
+<template>
+  <div>
     demo12
-  </div>`,
+  </div>
+</template>
+
+<script>
+export default {
   title: 'demo',
   data () {
     return {
@@ -12,4 +16,9 @@ Vue.component('custom-demo', {
   created () {
 
   }
-})
+}
+</script>
+
+<style scoped>
+
+</style>

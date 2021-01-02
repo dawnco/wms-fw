@@ -17,12 +17,22 @@ var dir = __dirname.replace(/\\/g, '/')
 const Util = {
   trim (str) {
     return str.replace(/(^\s*)|(\s*$)/sg, '')
+  },
+  // 驼峰转连字符
+  camel2line (str) {
+    return str.replace(/([A-Z])/g, '-$1').toLowerCase()
+  },
+  // 连字符转驼峰
+  line2camel (str) {
+    return str.replace(/^\-/, '').replace(/\-(\w)(\w+)/g, function (a, b, c) {
+      return b.toUpperCase() + c.toLowerCase()
+    })
   }
-
 }
 
 function msg (msg) {
-  console.log(msg)
+  let date = new Date()
+  console.log(date.getHours() + ':' + date.getMinutes() + ':' + date.getMinutes() + ' ' + msg)
 }
 
 // 生成路由和index.html
@@ -32,10 +42,19 @@ function tplAndRoute (dir) {
   let routeFiles = []
 
   let file = ''
-  let pathName = dir + '/static/page'
 
-  let files = fs.readdirSync(pathName)
+  let pathName
+  let files
+  // 组件
+  pathName = dir + '/static/component'
+  files = fs.readdirSync(pathName)
+  for (let i = 0; i < files.length; i++) {
+    jsFiles.push('<script src="/static/component/' + files[i] + '"></script>')
+  }
 
+  // 路由
+  pathName = dir + '/static/page'
+  files = fs.readdirSync(pathName)
   for (let i = 0; i < files.length; i++) {
     jsFiles.push('<script src="/static/page/' + files[i] + '"></script>')
   }
@@ -72,9 +91,9 @@ function tplAndRoute (dir) {
   msg('生成路由 ' + file)
 }
 
-// vue 转js
-function vue2js (dir) {
-  let dirname = dir + '/static/vue'
+// vuePage 转js
+function vuePage (dir) {
+  let dirname = dir + '/static/vue/page'
   let files = fs.readdirSync(dirname)
 
   for (let i = 0; i < files.length; i++) {
@@ -83,7 +102,11 @@ function vue2js (dir) {
     let content = fs.readFileSync(file, 'utf8')
 
     let match1 = /<template>(.+)<\/template>/gs.exec(content)
-    let tpl = match1[1]
+    if (match1 == null) {
+      continue
+    }
+
+    let tpl = Util.trim(match1[1])
 
     let match2 = /<script>(.+)<\/script>/gs.exec(content)
     if (match2 == null) {
@@ -103,6 +126,38 @@ function vue2js (dir) {
 
 }
 
+// vueComponent 转js
+function vueComponent (dir) {
+  let dirname = dir + '/static/vue/component'
+  let files = fs.readdirSync(dirname)
+
+  for (let i = 0; i < files.length; i++) {
+    let fileMame = files[i].replace('.vue', '')
+    let file = dirname + '/' + fileMame + '.vue'
+    let content = fs.readFileSync(file, 'utf8')
+
+    let match1 = /<template>(.+)<\/template>/gs.exec(content)
+    let tpl = Util.trim(match1[1])
+
+    let match2 = /<script>(.+)<\/script>/gs.exec(content)
+    if (match2 == null) {
+      console.log(file + ' has  no script')
+    }
+    let js = match2[1]
+
+    let jsFile = dir + '/static/component/' + fileMame + '.js'
+
+    js = Util.trim(js)
+    let name = Util.camel2line(fileMame.toLocaleLowerCase())
+    js = js.replace('export default {', `Vue.component('custom-${name}', {\n  template: \`${tpl}\`,`)
+
+    fs.writeFileSync(jsFile, js + ')')
+    msg('生成组件 ' + jsFile)
+
+  }
+
+}
+
 function check (dir) {
   let stat = fs.existsSync(dir)
   if (!stat) {
@@ -114,5 +169,15 @@ function check (dir) {
 check(dir + '/static/temp')
 check(dir + '/static/page')
 
-vue2js(dir)
+vuePage(dir)
+vueComponent(dir)
 tplAndRoute(dir)
+
+fs.watch(dir + '/static/vue/page', (event, filename) => {
+  vuePage(dir)
+  tplAndRoute(dir)
+})
+
+fs.watch(dir + '/static/vue/component', (event, filename) => {
+  vueComponent(dir)
+})

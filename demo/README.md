@@ -2,5 +2,5 @@
 
 先生成路由文件
 ```
-node build.js
+node www/build.js
 ```
