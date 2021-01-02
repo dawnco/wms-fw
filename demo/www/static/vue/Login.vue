@@ -38,7 +38,10 @@
 export default {
   data: () => {
     return {
-      fromData: {},
+      fromData: {
+        username: 'admin',
+        password: '111111'
+      },
       loading: false
     }
   },
@@ -49,7 +52,7 @@ export default {
       this.$request.post('/login', this.fromData).then(r => {
         this.$store.commit('logged', r.token)
         this.$tip.success('登录成功')
-        this.$router.push({ path: '/home' })
+        this.$router.push({ path: '/' })
       }).finally(r => {
         this.loading = false
       })

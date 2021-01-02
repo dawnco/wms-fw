@@ -1,0 +1,20 @@
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+.layout {
+    display: flex;
+}
+
+.layout-left {
+    width: 150px;
+    border: 1px solid red;
+}
+
+.layout-right {
+    flex: 1;
+    border: 1px solid #CCCCCC;
+    padding: 10px;
+    height: 100%;
+}

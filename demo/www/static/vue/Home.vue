@@ -46,7 +46,7 @@ export default {
     loadData () {
       this.loading = true
 
-      this.$request('/customer')
+      // this.$request('/customer')
 
     },
     handleInc () {
