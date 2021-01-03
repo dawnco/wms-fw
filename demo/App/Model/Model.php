@@ -65,11 +65,11 @@ class Model
         return $data;
     }
 
-    public function find($id)
+    public function find($id, $fields = "*")
     {
         $where[]   = ['AND id = ?', $id, true];
         $sql_where = $this->where($where);
-        return $this->db->getLine('SELECT * FROM `' . $this->table . '` WHERE ' . $sql_where);
+        return $this->db->getLine('SELECT ' . $fields . ' FROM `' . $this->table . '` WHERE ' . $sql_where);
     }
 
     public function update($id, $data)
@@ -83,7 +83,7 @@ class Model
 
     public function create($data)
     {
-        $data[$this->createdAt]    = $this->timestamp();
+        $data[$this->createdAt] = $this->timestamp();
 
         $data = $this->filterData($data);
 

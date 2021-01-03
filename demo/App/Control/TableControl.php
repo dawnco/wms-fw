@@ -9,12 +9,15 @@ namespace App\Control;
 
 use App\Exception\AuthException;
 use App\Model\Model;
+use Wms\Fw\Conf;
+use Wms\Fw\Db;
 
 class TableControl
 {
 
-    private $fields = [];
-    private $table  = "";
+    private   $fields = [];
+    private   $table  = "";
+    protected $db     = null;
 
     public function index($table, $id = 0)
     {
@@ -24,22 +27,24 @@ class TableControl
         $this->table = $table;
         $model       = Model::get($table);
 
+        $this->db = Db::instance();
+
         switch ($method) {
             case "GET":
                 if ($id) {
-                    return $model->find($id);
+                    return $this->find($model, $id);
                 } else {
                     return $this->all($model);
                 }
             break;
             case "POST":
-                return $model->create(input());
+                return $this->create($model, input());
             break;
             case "PUT":
-                return $model->update($id, input());
+                return $this->update($model, $id, input());
             break;
             case "DELETE":
-                return $model->delete($id);
+                return $this->delete($model, $id);
             break;
         }
 
@@ -52,7 +57,8 @@ class TableControl
     protected function where($model)
     {
 
-        $get   = input(null, []);
+        $get = input(null, []);
+
         $where = [];
         foreach ($get as $field => $val) {
 
@@ -129,5 +135,26 @@ class TableControl
         $data  = $model->all($query['where'], $query['page'], $query['size'], $query['sortField'] . " " . $query['sortOrder']);
         return $data;
     }
+
+    protected function find($model, $id)
+    {
+        return $model->find($id);
+    }
+
+    protected function create($model, $data)
+    {
+        return $model->create($data);
+    }
+
+    protected function delete($model, $id)
+    {
+        return $model->delete($id);
+    }
+
+    protected function update($model, $id, $data)
+    {
+        return $model->update($id, $data);
+    }
+
 
 }

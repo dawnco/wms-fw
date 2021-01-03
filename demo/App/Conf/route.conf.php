@@ -10,6 +10,10 @@ return [
     "login"        => ["c" => \App\Control\LoginControl::class, "m" => "index"],
     "product"      => ["c" => \App\Control\PortalControl::class, "m" => "index"],
     "product/save" => ["c" => \App\Control\PortalControl::class, "m" => "save"],
-    "(\w+)"        => ["c" => \App\Control\TableControl::class],
-    "(\w+)/(\d+)"  => ["c" => \App\Control\TableControl::class],
+
+    "admin"       => ["c" => \App\Control\AdminControl::class, "m" => 'enter'],
+    "admin/(\d+)" => ["c" => \App\Control\AdminControl::class, "m" => 'enter'],
+
+    "(\w+)"       => ["c" => \App\Control\TableControl::class],
+    "(\w+)/(\d+)" => ["c" => \App\Control\TableControl::class],
 ];

@@ -70,6 +70,7 @@ Vue.mixin({
       this.loadData()
     },
     handleShowAdd () {
+      this.formData = {}
       this.formVisible = true
     },
     handleSave () {

@@ -18,7 +18,7 @@ function input($key = null, $default = null)
     }
 
     if ($key === null) {
-        $val = $global;
+        $val = $global ?? $default;
     } else {
         $val = $global[$key] ?? $default;
     }

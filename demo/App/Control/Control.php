@@ -32,13 +32,13 @@ class Control
         $this->method = $GLOBALS['REQUEST_METHOD'] ?? 'GET';
         $this->db     = Db::instance();
         $token        = $_SERVER['X-TOKEN'] ?? '';
-        dump($token);
-        $this->token  = new Token(Redis::getInstance(), $token);
+        $this->token = new Token(Redis::getInstance(), $token);
 
     }
 
     public function index()
     {
+        $id = input("id");
         switch ($this->method) {
             case "GET":
                 return $this->find();
@@ -47,7 +47,7 @@ class Control
                 return $this->post();
             break;
             case "PUT":
-                return $this->update($this->filterField($_POST), $id);
+                return $this->update($this->filterField(input()), $id);
             break;
             case "DELETE":
                 return $this->delete($id);
@@ -56,7 +56,7 @@ class Control
     }
 
 
-    public function find()
+    public function find($id)
     {
         $where[]   = ['AND id = ?', $id, true];
         $sql_where = $this->db->where($where);
