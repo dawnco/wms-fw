@@ -31,7 +31,9 @@ class Control
     {
         $this->method = $GLOBALS['REQUEST_METHOD'] ?? 'GET';
         $this->db     = Db::instance();
-        $this->token = new Token(Redis::getInstance(), $_SERVER['X-TOKEN'] ?? '');
+        $token        = $_SERVER['X-TOKEN'] ?? '';
+        dump($token);
+        $this->token  = new Token(Redis::getInstance(), $token);
 
     }
 

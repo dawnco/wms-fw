@@ -18,7 +18,6 @@ class TableControl
 
     public function index($table, $id = 0)
     {
-        throw new AuthException('没有权限');
 
         $method = $GLOBALS['REQUEST_METHOD'] ?? 'GET';
 
@@ -34,7 +33,7 @@ class TableControl
                 }
             break;
             case "POST":
-                return $model->create(inupt());
+                return $model->create(input());
             break;
             case "PUT":
                 return $model->update($id, inupt());
@@ -53,7 +52,7 @@ class TableControl
     protected function where($model)
     {
 
-        $get   = input();
+        $get   = input(null, []);
         $where = [];
         foreach ($get as $field => $val) {
 
