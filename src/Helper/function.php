@@ -11,10 +11,16 @@
  */
 function input($key = null, $default = null)
 {
+    $global = $_POST ?: ($_GET ?: null);
+
+    if (!$global) {
+        $global = json_decode(file_get_contents("php://input"), true);
+    }
+
     if ($key === null) {
-        $val = $_POST ?: ($_GET ?: $default);
+        $val = $global;
     } else {
-        $val = $_POST[$key] ?? ($_GET[$key] ?? $default);
+        $val = $global[$key] ?? $default;
     }
 
     if (is_array($val)) {

@@ -35,6 +35,11 @@ class Response
         if ($data !== null) {
             $out['data'] = $data;
         }
+
+        if (Conf::get('app.env') == 'dev') {
+            $out['sql'] = Db::instance()->sql;
+        }
+
         $this->send(json_encode($out));
     }
 

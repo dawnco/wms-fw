@@ -36,7 +36,7 @@ class TableControl
                 return $model->create(input());
             break;
             case "PUT":
-                return $model->update($id, inupt());
+                return $model->update($id, input());
             break;
             case "DELETE":
                 return $model->delete($id);

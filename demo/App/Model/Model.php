@@ -84,7 +84,6 @@ class Model
     public function create($data)
     {
         $data[$this->createdAt]    = $this->timestamp();
-        $data[$this->enabledField] = Enabled::NO;
 
         $data = $this->filterData($data);
 

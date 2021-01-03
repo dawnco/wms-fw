@@ -53,15 +53,15 @@
       config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
       config.headers['X-Token'] =  window.localStorage.getItem('X-Token') || ''
 
-      config.transformRequest = [function (data) {
-
-        let raw = new Array()
-        for (let i in data) {
-          raw.push( i + "=" + urlencode(data[i]))
-        }
-        return raw.join("&")
-
-      }]
+      // config.transformRequest = [function (data) {
+      //
+      //   let raw = new Array()
+      //   for (let i in data) {
+      //     raw.push( i + "=" + urlencode(data[i]))
+      //   }
+      //   return raw.join("&")
+      //
+      // }]
 
 
 
