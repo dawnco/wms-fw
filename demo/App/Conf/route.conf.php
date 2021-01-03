@@ -8,6 +8,7 @@ return [
     // 'url 可用正则' => ['c' => '控制器', 'm' => '方法'];
     //"portal" => ["c" => \App\control\Portal::class, "m" => "index"],
     "login"        => ["c" => \App\Control\LoginControl::class, "m" => "index"],
+    "logout"       => ["c" => \App\Control\LoginControl::class, "m" => "logout"],
     "product"      => ["c" => \App\Control\PortalControl::class, "m" => "index"],
     "product/save" => ["c" => \App\Control\PortalControl::class, "m" => "save"],
 

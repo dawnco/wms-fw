@@ -31,6 +31,11 @@ class Token
 
     }
 
+    public function destroy()
+    {
+        $this->redis->del($this->saveKey());
+    }
+
     public function new($data)
     {
         $this->key = self::sid();

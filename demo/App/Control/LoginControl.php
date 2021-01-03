@@ -19,7 +19,8 @@ class LoginControl
     public function __construct()
     {
         $this->db    = Db::instance();
-        $this->token = new Token(Redis::getInstance(), $_SERVER['X-TOKEN'] ?? '');
+        $token       = $_SERVER['HTTP_X_TOKEN'] ?? '';
+        $this->token = new Token(Redis::getInstance(), $token);
     }
 
     public function index()
@@ -52,5 +53,10 @@ class LoginControl
         } else {
             throw new AppException("密码错误");
         }
+    }
+
+    public function logout()
+    {
+        $this->token->destroy();
     }
 }
