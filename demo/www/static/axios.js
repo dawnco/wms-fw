@@ -50,7 +50,7 @@
       // const token = util.cookies.get('token')
       // // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
       // config.headers['X-Token'] = token
-      config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+      config.headers['Content-Type'] = 'application/json'
       config.headers['X-Token'] =  window.localStorage.getItem('X-Token') || ''
 
       // config.transformRequest = [function (data) {

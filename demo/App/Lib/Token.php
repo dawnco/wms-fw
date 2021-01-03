@@ -21,14 +21,12 @@ class Token
 
     public function __construct($redis, $key)
     {
-        $this->key = $this->prefix . $key;
-
+        $this->key = $key;
 
         $this->redis = $redis;
 
-
-        if ($this->redis->exists($this->key)) {
-            $this->redis->expire($this->key, $this->expire);
+        if ($this->redis->exists($this->saveKey())) {
+            $this->redis->expire($this->saveKey(), $this->expire);
         }
 
     }
@@ -36,39 +34,44 @@ class Token
     public function new($data)
     {
         $this->key = self::sid();
-        $this->redis->hMSet($this->key, $data);
-        $this->redis->expire($this->key, $this->expire);
+        $this->redis->hMSet($this->saveKey(), $data);
+        $this->redis->expire($this->saveKey(), $this->expire);
         return $this;
     }
 
     public function set($key, $val)
     {
-        $this->redis->hSet($this->key, $key, $val);
+        $this->redis->hSet($this->saveKey(), $key, $val);
         return $this;
     }
 
     public function get($key)
     {
-        if ($this->key == $this->prefix) {
+        if (!$this->key) {
             return null;
         }
-        return $this->redis->hGet($this->key, $key) ?: null;
+        return $this->redis->hGet($this->saveKey(), $key) ?: null;
     }
 
     public function del($key)
     {
-        return $this->redis->hDel($this->key, $key);
+        return $this->redis->hDel($this->saveKey(), $key);
         return $this;
     }
 
     public function getTokenKey()
     {
-        return str_replace($this->prefix, "", $this->key);
+        return $this->key;
     }
 
     private function sid()
     {
         return md5(uniqid() . time());
+    }
+
+    private function saveKey()
+    {
+        return $this->prefix . $this->key;
     }
 
 }

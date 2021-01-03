@@ -12,7 +12,7 @@ use App\Model\Model;
 use Wms\Fw\Conf;
 use Wms\Fw\Db;
 
-class TableControl
+class TableControl extends Control
 {
 
     private   $fields = [];
