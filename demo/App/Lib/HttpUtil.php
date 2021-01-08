@@ -7,7 +7,7 @@
 namespace App\Lib;
 
 
-use App\exception\NetworkException;
+use App\Exception\NetworkException;
 
 class HttpUtil
 {
