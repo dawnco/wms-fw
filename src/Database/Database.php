@@ -6,9 +6,6 @@
 
 namespace Wms\Database;
 
-
-use Wms\Fw\WmsException;
-
 class Database
 {
 
@@ -57,7 +54,7 @@ class Database
         if ($data === null) {
             return $sql;
         } elseif (!is_array($data)) {
-            throw new WmsException("except array data: $sql");
+            throw new DatabaseException("except array data: $sql");
         }
 
         $sql = str_replace(

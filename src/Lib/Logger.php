@@ -75,10 +75,24 @@ class Logger
 
     protected function log($level, $msg)
     {
-        $str = date("Y-m-d H:i:s") . " [$level] " . $msg . "\n";
+
+        // bof 找到哪里发生的日志
+        $call = [];
+
+        $array = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        foreach ($array as $row) {
+            if (isset($row['file'])) {
+                $file = str_replace("\\", "/", $row['file']);
+                if (!strpos($file, "Logger.php") && !strpos($file, "Log.php") && !strpos($file, "Exception.php")) {
+                    $call[] = "    {$row['file']}({$row['line']}):{$row['function']}";
+                }
+            }
+        }
+
+        // eof 找到哪里发生的日志
+        $str = sprintf("%s [%s] %s\n%s\n\n", date("Y-m-d H:i:s"), $level, $msg, implode("\n", $call));
 
         $file = implode("", [$this->dir, "/", $this->loggerName, "-", $level, date("-Y-m-d"), ".log"]);
-
         file_put_contents($file, $str, FILE_APPEND);
     }
 }

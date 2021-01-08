@@ -6,6 +6,8 @@
 
 namespace Wms\Fw;
 
+use Wms\Lib\Log;
+
 class Fw
 {
     public static $application = null;
@@ -28,6 +30,9 @@ class Fw
 
     public function run()
     {
+
+        set_error_handler([$this, 'errorHandler']);
+
         $response = new Response();
         try {
             $body = $this->exec();
@@ -85,6 +90,12 @@ class Fw
                 ], $hook['seq'], isset($hook['p']) ? $hook['p'] : []);
             }
         }
+    }
+
+    public function errorHandler($errno, $errstr, $errfile, $errline)
+    {
+        Log::error("PHP ERROR: %s in %s:%s",
+            $errstr, $errfile, $errline);
     }
 
 }
