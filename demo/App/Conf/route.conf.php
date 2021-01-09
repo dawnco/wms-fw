@@ -12,6 +12,9 @@ return [
     "product"      => ["c" => \App\Control\PortalControl::class, "m" => "index"],
     "product/save" => ["c" => \App\Control\PortalControl::class, "m" => "save"],
 
+
+    "customer/follow" => ["c" => \App\Control\CustomerControl::class, "m" => "follow"],
+
     "admin"       => ["c" => \App\Control\AdminControl::class, "m" => 'enter'],
     "admin/(\d+)" => ["c" => \App\Control\AdminControl::class, "m" => 'enter'],
 

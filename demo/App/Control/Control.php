@@ -27,22 +27,26 @@ class Control
      */
     protected $db;
 
+    protected $adminId = 0;
+
     private $method = "GET";
 
     public function __construct()
     {
-        $this->method = $GLOBALS['REQUEST_METHOD'] ?? 'GET';
-        $this->db     = Db::instance();
-        $token        = $_SERVER['HTTP_X_TOKEN'] ?? '';
-        $this->token  = new Token(Redis::getInstance(), $token);
-        $id           = $this->token->get('id');
+        $this->method  = $GLOBALS['REQUEST_METHOD'] ?? 'GET';
+        $this->db      = Db::instance();
+        $token         = $_SERVER['HTTP_X_TOKEN'] ?? '';
+        $this->token   = new Token(Redis::getInstance(), $token);
+        $id            = $this->token->get('id');
+        $this->adminId = $id;
+
         if (!$id) {
-            throw new AuthException();
+            throw new AuthException("没有权限");
         }
 
     }
 
-    public function index($table, $id = 0)
+    public function index($table = null, $id = 0)
     {
 
     }

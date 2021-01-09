@@ -4,3 +4,6 @@
 ```
 node www/build.js
 ```
+
+页面文件在 www/static/vue/page
+组件文件在 www/static/vue/page

@@ -9,6 +9,7 @@ namespace App\Control;
 
 use App\Exception\AuthException;
 use App\Model\Model;
+use Wms\Database\Mysqli;
 use Wms\Fw\Conf;
 use Wms\Fw\Db;
 
@@ -17,15 +18,21 @@ class TableControl extends Control
 
     private   $fields = [];
     private   $table  = "";
+    /**
+     * @var Mysqli
+     */
     protected $db     = null;
 
-    public function index($table, $id = 0)
+    public function index($table = null, $id = 0)
     {
 
         $method = $GLOBALS['REQUEST_METHOD'] ?? 'GET';
 
-        $this->table = $table;
-        $model       = Model::get($table);
+        if ($table) {
+            $this->table = $table;
+        }
+
+        $model = Model::get($this->table);
 
         $this->db = Db::instance();
 

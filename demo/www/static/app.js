@@ -36,6 +36,20 @@ Vue.prototype.$custom = {
       message: message,
       type: type
     })
+  },
+  success (message = '成功') {
+    Vue.prototype.$message({
+      showClose: true,
+      message: message,
+      type: 'success'
+    })
+  },
+  error (message = '失败') {
+    Vue.prototype.$message({
+      showClose: true,
+      message: message,
+      type: 'error'
+    })
   }
 }
 
