@@ -4,25 +4,6 @@ const router = new VueRouter({
   routes // (缩写) 相当于 routes: routes
 })
 
-Vue.prototype.$tip = {
-  success (msg) {
-    Vue.prototype.$message({
-      message: msg,
-      type: 'success',
-      showClose: true,
-      duration: 3 * 1000
-    })
-  },
-  error (msg) {
-    Vue.prototype.$message({
-      message: msg,
-      type: 'error',
-      showClose: true,
-      duration: 3 * 1000
-    })
-  }
-}
-
 Vue.prototype.$custom = {
   confirm (message) {
     return new Promise((resolve, reject) => {
@@ -31,21 +12,21 @@ Vue.prototype.$custom = {
     })
   },
   tip (message = '操作成功', type = 'success') {
-    Vue.prototype.$message({
+    Vue.prototype.$notify({
       showClose: true,
       message: message,
       type: type
     })
   },
   success (message = '成功') {
-    Vue.prototype.$message({
+    Vue.prototype.$notify({
       showClose: true,
       message: message,
       type: 'success'
     })
   },
   error (message = '失败') {
-    Vue.prototype.$message({
+    Vue.prototype.$notify({
       showClose: true,
       message: message,
       type: 'error'

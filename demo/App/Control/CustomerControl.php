@@ -7,6 +7,8 @@
 namespace App\Control;
 
 
+use Wms\Fw\WmsException;
+
 class CustomerControl extends TableControl
 {
 
@@ -21,6 +23,13 @@ class CustomerControl extends TableControl
             'note'       => $note,
         ]);
 
+    }
+
+    public function list()
+    {
+        $customerId = input('customerId');
+        $data = $this->db->getData("SELECT * FROM customer_follow WHERE customerId = ? ORDER BY id DESC", [$customerId]);
+        return $data;
     }
 
 }

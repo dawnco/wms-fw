@@ -29,7 +29,7 @@
     // 打印到控制台
     console.log(error)
     // 显示提示
-    Vue.prototype.$message({
+    Vue.prototype.$notify({
       message: error.message,
       type: 'error',
       showClose: true,

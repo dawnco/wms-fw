@@ -13,7 +13,8 @@ return [
     "product/save" => ["c" => \App\Control\PortalControl::class, "m" => "save"],
 
 
-    "customer/follow" => ["c" => \App\Control\CustomerControl::class, "m" => "follow"],
+    "customer/follow"      => ["c" => \App\Control\CustomerControl::class, "m" => "follow"],
+    "customer/follow/list" => ["c" => \App\Control\CustomerControl::class, "m" => "list"],
 
     "admin"       => ["c" => \App\Control\AdminControl::class, "m" => 'enter'],
     "admin/(\d+)" => ["c" => \App\Control\AdminControl::class, "m" => 'enter'],
