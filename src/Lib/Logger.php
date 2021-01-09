@@ -48,29 +48,43 @@ class Logger
     public function debug($msg, ...$arg)
     {
         if ($this->level <= 1) {
-            $this->log("debug", vsprintf($msg, $arg));
+            $this->log("debug", $this->format($msg, $arg));
         }
     }
 
     public function info($msg, ...$arg)
     {
         if ($this->level <= 2) {
-            $this->log("info", vsprintf($msg, $arg));
+            $this->log("info", $this->format($msg, $arg));
         }
     }
 
     public function warning($msg, ...$arg)
     {
         if ($this->level <= 3) {
-            $this->log("warning", vsprintf($msg, $arg));
+            $this->log("warning", $this->format($msg, $arg));
         }
     }
 
     public function error($msg, ...$arg)
     {
         if ($this->level <= 4) {
-            $this->log("error", vsprintf($msg, $arg));
+            $this->log("error", $this->format($msg, $arg));
         }
+    }
+
+    protected function format($msg, $arg)
+    {
+        foreach ($arg as $k => $v) {
+            if ($v instanceof \Throwable) {
+                $arg[$k] = sprintf("ExceptionCode: %s ExceptionMessage: %s\n    ExceptionTrace:\n    %s",
+                    $v->getCode(),
+                    $v->getMessage(),
+                    str_replace("\n", "\n    ", $v->getTraceAsString())
+                    );
+            }
+        }
+        return vsprintf($msg, $arg);
     }
 
     protected function log($level, $msg)
@@ -90,7 +104,7 @@ class Logger
         }
 
         // eof 找到哪里发生的日志
-        $str = sprintf("%s [%s] %s\n%s\n\n", date("Y-m-d H:i:s"), $level, $msg, implode("\n", $call));
+        $str = sprintf("%s [%s] %s\n    LoggerTrace:\n%s\n\n", date("Y-m-d H:i:s"), $level, $msg, implode("\n", $call));
 
         $file = implode("", [$this->dir, "/", $this->loggerName, "-", $level, date("-Y-m-d"), ".log"]);
         file_put_contents($file, $str, FILE_APPEND);

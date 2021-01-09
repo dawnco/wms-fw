@@ -17,9 +17,6 @@ class WmsException extends \Exception
     {
         parent::__construct($message, $code, $previous);
 
-        Log::info("Exception Code:%s Message: %s",
-            $this->getCode(),
-            $this->getMessage());
 
     }
 

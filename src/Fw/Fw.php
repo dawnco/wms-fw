@@ -6,6 +6,7 @@
 
 namespace Wms\Fw;
 
+use Wms\Database\DatabaseException;
 use Wms\Lib\Log;
 
 class Fw
@@ -37,10 +38,16 @@ class Fw
         try {
             $body = $this->exec();
             $response->sendJson(0, null, $body);
+        } catch (DatabaseException $e) {
+            $response->sendJson($e->getCode(), "DATABASE OPERATE ERROR");
+            Log::error("%s %s", "DATABASE OPERATE ERROR", $e);
         } catch (WmsException $e) {
             $response->sendJson($e->getCode(), $e->getMessage());
+            Log::info("%s", $e);
         } catch (\Exception $e) {
             $response->status(500)->send($e->getMessage());
+            Log::info("Exception %s", $e);
+
         }
     }
 
