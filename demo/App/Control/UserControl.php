@@ -8,7 +8,7 @@ namespace App\Control;
 
 use App\Dict\Dict;
 
-class UserControl extends TableControl
+class UserControl extends SampleFullControl
 {
 
     protected $table = 'user';

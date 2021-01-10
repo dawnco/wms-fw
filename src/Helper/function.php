@@ -5,36 +5,6 @@
  */
 
 /**
- * @param  $key
- * @param  $default
- * @return mixed
- */
-function input($key = null, $default = null)
-{
-    $global = $_POST ?: ($_GET ?: null);
-
-    if (!$global) {
-        $global = json_decode(file_get_contents("php://input"), true);
-    }
-
-    if ($key === null) {
-        $val = $global ?? $default;
-    } else {
-        $val = $global[$key] ?? $default;
-    }
-
-    if (is_array($val)) {
-        foreach ($val as $k => $v) {
-            $val[$k] = trim($v);
-        }
-    } else {
-        $val = trim($val);
-    }
-
-    return $val;
-}
-
-/**
  * 获取客户端ip
  * @return type
  */
@@ -71,6 +41,33 @@ function get_client_ip()
     }
     preg_match("/[\d\.]{7,15}/", $realip, $realip);
     return !empty($realip[0]) ? $realip[0] : '0.0.0.0';
+}
+
+
+/**
+ * 获取数组中某个值可以点取值
+ * @param      $arr
+ * @param      $index
+ * @param null $default
+ * @return mixed|null
+ */
+function arr_get($arr, $index, $default = null)
+{
+
+    if (is_int($index)) {
+        return $arr[$index] ?? $default;
+    }
+
+    $ia = explode('.', $index);
+    $_t = $arr;
+    foreach ($ia as $v) {
+        if (isset($_t[$v])) {
+            $_t = $_t[$v];
+        } else {
+            return $default;
+        }
+    }
+    return $_t;
 }
 
 function dump(...$args)

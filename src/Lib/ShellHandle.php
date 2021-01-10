@@ -10,19 +10,6 @@ namespace Wms\Lib;
 abstract class ShellHandle
 {
 
-    protected $config;
-
-    public static function get($config = [])
-    {
-        return new static($config);
-    }
-
-    protected function __construct($config)
-    {
-        $this->config = $config;
-    }
-
-
     abstract protected function handle($param = null);
 
     public function start($param = null)
@@ -40,10 +27,10 @@ abstract class ShellHandle
             // 红色字
             echo "\033[32;31m $msg \033[0m\n";
             return;
-        }else{
+        } else {
             // 绿色
             echo "\033[32;40m $msg \033[0m\n";
-            return ;
+            return;
         }
     }
 

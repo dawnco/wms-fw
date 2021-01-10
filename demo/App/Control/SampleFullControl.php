@@ -13,55 +13,50 @@ use Wms\Database\Mysqli;
 use Wms\Fw\Conf;
 use Wms\Fw\Db;
 
-class TableControl extends Control
+class SampleFullControl extends RestFullControl
 {
 
-    private   $fields = [];
-    private   $table  = "";
-    /**
-     * @var Mysqli
-     */
-    protected $db     = null;
+    protected $model;
 
-    public function index($table = null, $id = 0)
+    public function sample($table = null, $id = 0)
     {
+        $this->model = Model::get($table);
+        return parent::restFull($id);
+    }
 
-        $method = $GLOBALS['REQUEST_METHOD'] ?? 'GET';
+    public function index()
+    {
+        $query = $this->where();
 
-        if ($table) {
-            $this->table = $table;
-        }
+        $data = $this->model->all($query['where'], $query['page'], $query['size'], $query['sortField'] . " " . $query['sortOrder']);
+        return $data;
+    }
 
-        $model = Model::get($this->table);
+    public function show($id)
+    {
+        return $this->model->find($id);
+    }
 
-        $this->db = Db::instance();
+    public function store()
+    {
+        return $this->model->create($this->request->data());
+    }
 
-        switch ($method) {
-            case "GET":
-                if ($id) {
-                    return $this->find($model, $id);
-                } else {
-                    return $this->all($model);
-                }
-            break;
-            case "POST":
-                return $this->create($model, input());
-            break;
-            case "PUT":
-                return $this->update($model, $id, input());
-            break;
-            case "DELETE":
-                return $this->delete($model, $id);
-            break;
-        }
+    public function update($id)
+    {
+        return $this->model->update($id, $this->request->data());
+    }
 
+    public function destroy($id)
+    {
+        return $this->model->delete($id);
     }
 
     /**
      * @param Model $model
      * @return array
      */
-    protected function where($model)
+    protected function where()
     {
 
         $get = input(null, []);
@@ -105,7 +100,7 @@ class TableControl extends Control
                 continue;
             }
 
-            if ($model->hasField($field)) {
+            if ($this->model->hasField($field)) {
                 $compareField = strtolower($field);
                 if (strpos($compareField, "name") !== false
                     || strpos($compareField, "code") !== false
@@ -131,37 +126,5 @@ class TableControl extends Control
             'sortOrder' => $sortOrder,
         ];
     }
-
-    /**
-     * @param Model $model
-     * @return array
-     */
-    protected function all($model)
-    {
-        $query = $this->where($model);
-        $data  = $model->all($query['where'], $query['page'], $query['size'], $query['sortField'] . " " . $query['sortOrder']);
-        return $data;
-    }
-
-    protected function find($model, $id)
-    {
-        return $model->find($id);
-    }
-
-    protected function create($model, $data)
-    {
-        return $model->create($data);
-    }
-
-    protected function delete($model, $id)
-    {
-        return $model->delete($id);
-    }
-
-    protected function update($model, $id, $data)
-    {
-        return $model->update($id, $data);
-    }
-
 
 }

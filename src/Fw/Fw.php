@@ -34,9 +34,10 @@ class Fw
 
         set_error_handler([$this, 'errorHandler']);
 
+        $request  = new Request();
         $response = new Response();
         try {
-            $body = $this->exec();
+            $body = $this->exec($request);
             $response->sendJson(0, null, $body);
         } catch (DatabaseException $e) {
             $response->sendJson($e->getCode(), "DATABASE OPERATE ERROR");
@@ -51,7 +52,7 @@ class Fw
         }
     }
 
-    private function exec()
+    private function exec($request)
     {
 
         $this->route = new Route();
@@ -67,7 +68,7 @@ class Fw
             throw new WmsException($control . " File Not Found");
         }
 
-        $classInstance = new $control();
+        $classInstance = new $control($request);
 
         if (!method_exists($classInstance, $method)) {
             throw new WmsException($control . "->" . $method . "() Method Not Found");
@@ -83,8 +84,13 @@ class Fw
 
     public function shell($argv)
     {
-        $name = $argv[1];
-        include APP_PATH . "/Shell/" . $name . ".shell.php";
+        $name    = $argv[1];
+        $clsName = "\\App\\Shell\\" . ucfirst(strtolower($name));
+        if (!class_exists($clsName)) {
+            throw new WmsException(" $name shell 不存在");
+        }
+        $cls = new $clsName();
+        return $cls->start(array_slice($argv, 2));
     }
 
     public function hook()

@@ -9,8 +9,8 @@ namespace App\Control;
 
 use App\Exception\AuthException;
 use App\Lib\Token;
-use App\Model\Model;
 use Wms\Fw\Db;
+use Wms\Fw\Request;
 use Wms\Lib\Redis;
 
 class Control
@@ -29,16 +29,23 @@ class Control
 
     protected $adminId = 0;
 
-    private $method = "GET";
+    /**
+     * @var Request
+     */
+    protected $request;
 
-    public function __construct()
+
+    public function __construct($request)
     {
-        $this->method  = $GLOBALS['REQUEST_METHOD'] ?? 'GET';
+
+        $this->request = $request;
+        $this->method  = $request->getMethod();
         $this->db      = Db::instance();
-        $token         = $_SERVER['HTTP_X_TOKEN'] ?? '';
-        $this->token   = new Token(Redis::getInstance(), $token);
+        $this->token   = new Token(Redis::getInstance(), $request->header("x-token"));
         $id            = $this->token->get('id');
         $this->adminId = $id;
+
+        $this->init();
 
         if (!$id) {
             throw new AuthException("没有权限");
@@ -46,10 +53,9 @@ class Control
 
     }
 
-    public function index($table = null, $id = 0)
+    public function init()
     {
 
     }
-
 
 }

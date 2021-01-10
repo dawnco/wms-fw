@@ -18,8 +18,8 @@ class Model
     // 字段 留空从数据库获取
     protected $fields = [];
 
-    protected $updatedAt = 'updated';
-    protected $createdAt = 'created';
+    protected $updated = 'updated';
+    protected $created = 'created';
 
 
     protected $db = null;

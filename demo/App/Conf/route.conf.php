@@ -14,12 +14,16 @@ return [
     "data/name"    => ["c" => \App\Control\DataNameControl::class, "m" => "name"],
 
 
+    "customer"       => ["c" => \App\Control\CustomerControl::class, "m" => "restFull"],
+    "customer/(\d+)" => ["c" => \App\Control\CustomerControl::class, "m" => "restFull"],
+
+
     "customer/follow"      => ["c" => \App\Control\CustomerControl::class, "m" => "follow"],
     "customer/follow/list" => ["c" => \App\Control\CustomerControl::class, "m" => "list"],
 
     "admin"       => ["c" => \App\Control\AdminControl::class, "m" => 'enter'],
     "admin/(\d+)" => ["c" => \App\Control\AdminControl::class, "m" => 'enter'],
 
-    "(\w+)"       => ["c" => \App\Control\TableControl::class],
-    "(\w+)/(\d+)" => ["c" => \App\Control\TableControl::class],
+    "(\w+)"       => ["c" => \App\Control\SampleFullControl::class, "m" => 'sample'],
+    "(\w+)/(\d+)" => ["c" => \App\Control\SampleFullControl::class, "m" => 'sample'],
 ];

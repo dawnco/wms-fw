@@ -10,18 +10,41 @@ namespace Wms\Fw;
 class Request
 {
 
-    public function header($name)
+    private $rawJson;
+
+    public function __construct()
+    {
+        $this->rawJson = json_decode(file_get_contents("php://input"), true);
+    }
+
+    public function header($name, $default = null)
     {
         $key = "HTTP_" . str_replace("-", "_", strtoupper($name));
-        return $_SERVER[$key] ?? null;
+        return $_SERVER[$key] ?? $default;
     }
 
-    public function input($key = null)
+    public function input($key = null, $default = null)
     {
-        return $this->post($key) ?: $this->get($key);
+        $val = $this->post($key);
+        if ($val !== null) {
+            return $val;
+        }
+
+        $val = $this->get($key);
+        if ($val !== null) {
+            return $val;
+        }
+
+        $val = $this->data($key);
+        if ($val !== null) {
+            return $val;
+        }
+
+        return $default;
+
     }
 
-    public function get($key = null)
+    public function get($key = null, $default = null)
     {
         if ($key == null) {
             return $this->trim($_GET);
@@ -30,12 +53,26 @@ class Request
         }
     }
 
-    public function post($key = null)
+    public function post($key = null, $default = null)
     {
         if ($key == null) {
             return $this->trim($_POST);
         } else {
-            return isset($_POST[$key]) ? $this->trim($_POST[$key]) : null;
+            return isset($_POST[$key]) ? $this->trim($_POST[$key]) : $default;
+        }
+    }
+
+    public function getMethod()
+    {
+        return strtoupper($_SERVER['REQUEST_METHOD'] ?? "GET");
+    }
+
+    public function data($key = null, $default = null)
+    {
+        if ($key === null) {
+            return $this->rawJson;
+        } else {
+            return $this->rawJson[$key] ?? $default;
         }
     }
 

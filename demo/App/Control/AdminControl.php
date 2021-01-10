@@ -6,33 +6,33 @@
 
 namespace App\Control;
 
-use App\Dict\Dict;
-
-class AdminControl extends TableControl
+class AdminControl extends SampleFullControl
 {
 
     protected $table = 'admin';
 
     public function enter($id = 0)
     {
-        return $this->index($this->table, $id);
+        return $this->sample($this->table, $id);
     }
 
-    protected function find($model, $id)
+    public function show($id)
     {
-        return $model->find($id, "id,username,name");
+        return $this->model->find($id, "id,username,name");
     }
 
-    protected function update($model, $id, $data)
+    public function update($id)
     {
+        $data = $this->request->data();
         if (isset($data['password'])) {
             $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         }
-        return $model->update($id, $data);
+        return $this->model->update($id, $data);
     }
 
-    protected function create($model, $data)
+    public function store()
     {
+        $data             = $this->request->data();
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         return $model->create($data);
     }
