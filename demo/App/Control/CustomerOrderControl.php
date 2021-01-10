@@ -101,7 +101,6 @@ class CustomerOrderControl extends RestFullControl
      */
     public function destroy($id)
     {
-
         $table = $this->table;
         return $this->db->delete($table, ['id' => $id]);
     }
