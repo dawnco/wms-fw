@@ -12,6 +12,29 @@ use Wms\Lib\ShellHandle;
 
 class ControlBuild extends ShellHandle
 {
+
+    /**
+     * 　　* 下划线转驼峰
+     * 　　* 思路:
+     * 　　* step1.原字符串转小写,原字符串中的分隔符用空格替换,在字符串开头加上分隔符
+     * 　　* step2.将字符串中每个单词的首字母转换为大写,再去空格,去字符串首部附加的分隔符.
+     * 　　*/
+    public function camelize($uncamelized_words, $separator = '_')
+    {
+        $uncamelized_words = $separator . str_replace($separator, " ", strtolower($uncamelized_words));
+        return ltrim(str_replace(" ", "", ucwords($uncamelized_words)), $separator);
+    }
+
+    /**
+     * 驼峰命名转下划线命名
+     * 思路:
+     * 小写和大写紧挨一起的地方,加上分隔符,然后全部转小写
+     */
+    public function uncamelize($camelCaps, $separator = '_')
+    {
+        return strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $camelCaps));
+    }
+
     protected function handle($param = null)
     {
         $table = arr_get($param, 0);
@@ -23,7 +46,7 @@ class ControlBuild extends ShellHandle
         $db   = Db::instance();
         $data = $db->getData("desc `$table`");
 
-        $controlName = ucfirst(strtolower($table)) . "Control";
+        $controlName = ucfirst($this->camelize(strtolower($table))) . "Control";
 
         $str = $this->tpl($table, $controlName, $data);
 
@@ -68,9 +91,9 @@ class {$controlName} extends RestFullControl
     }
 
     /**
-    * list data
+    * 列表
     */
-    function index()
+    public function index()
     {
         \$table   = \$this->table;
         \$fields  = "*";
@@ -87,16 +110,22 @@ class {$controlName} extends RestFullControl
         return \$data;
     }
 
-    function show(\$id)
+    /**
+    * 显示数据
+    */
+    public function show(\$id)
     {
         \$fields   = "*";
         \$table    = \$this->table;
         \$where[]  = ['AND id = ?', \$id, true];
         \$sqlWhere = \$this->db->where(\$where);
-        return \$this->db->getLine('SELECT ' . \$fields . ' FROM `' . \$table . '` WHERE ' . \$sqlWhere);
+        return \$this->db->getLine("SELECT \$fields FROM `\$table` WHERE " . \$sqlWhere);
     }
 
-    function store()
+    /**
+    * 保存
+    */
+    public function store()
     {
         \$table = \$this->table;
         
@@ -105,7 +134,10 @@ $rowStr
         return \$this->db->insert(\$table, \$row);
     }
 
-    function update(\$id)
+    /**
+    * 修改
+    */
+    public function update(\$id)
     {
         \$table = \$this->table;
         
@@ -114,7 +146,10 @@ $rowStr
         return \$this->db->update(\$table, \$row, ['id' => \$id]);
     }
 
-    function destroy(\$id)
+    /**
+    * 删除
+    */
+    public function destroy(\$id)
     {
         \$table = \$this->table;
         return \$this->db->delete(\$table, ['id' => \$id]);

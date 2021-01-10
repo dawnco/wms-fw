@@ -113,6 +113,7 @@ Vue.mixin({
     },
     handleRemove (index, row) {
       this.restRemove('customer', row.id)
+      this.loadData()
     },
     restRemove (entry, id) {
       let loading = this.$loading()

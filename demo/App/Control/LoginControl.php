@@ -10,24 +10,31 @@ use App\Dict\Dict;
 use App\Exception\AppException;
 use App\Lib\Token;
 use Wms\Fw\Db;
+use Wms\Fw\Request;
 use Wms\Lib\Redis;
 
 class LoginControl
 {
     protected $token;
+    /**
+     * @var Request
+     */
+    protected $request;
 
-    public function __construct()
+    public function __construct($request)
     {
-        $this->db    = Db::instance();
-        $token       = $_SERVER['HTTP_X_TOKEN'] ?? '';
-        $this->token = new Token(Redis::getInstance(), $token);
+
+        $this->request = $request;
+        $this->db      = Db::instance();
+        $token         = $this->request->header("x-token");
+        $this->token   = new Token(Redis::getInstance(), $token);
     }
 
     public function index()
     {
 
-        $username = input("username");
-        $password = input("password");
+        $username = $this->request->input("username");
+        $password = $this->request->input("password");
 
         $admin = $this->db->getLine("SELECT * FROM admin WHERE `username`= ?s", [$username]);
 

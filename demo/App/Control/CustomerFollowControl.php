@@ -1,17 +1,17 @@
 <?php
 /**
- * @date   2021-01-10 19:04:16
+ * @date   2021-01-10 19:18:25
  */
 
 namespace App\Control;
 
-class CustomerControl extends RestFullControl
+class CustomerFollowControl extends RestFullControl
 {
     protected $table;
 
     public function init()
     {
-        $this->table = "customer";
+        $this->table = "customer_follow";
     }
 
     /**
@@ -22,6 +22,7 @@ class CustomerControl extends RestFullControl
         $table   = $this->table;
         $fields  = "*";
         $where[] = ["AND `id` = ?", $this->request->input('id')];
+        $where[] = ["AND `customerId` = ?", $this->request->input('customerId')];
 
         $page = $this->request->input('page', 1);
         $size = $this->request->input('pageSize', 10);
@@ -53,15 +54,10 @@ class CustomerControl extends RestFullControl
     {
         $table = $this->table;
 
-        $row["adminId"] = $this->adminId;
+        $row["customerId"] = $this->request->input("customerId");
+        $row["adminId"]    = $this->adminId;
+        $row["note"]       = $this->request->input("note");
 
-        $row["group"]   = $this->request->input("group");
-        $row["name"]    = $this->request->input("name");
-        $row["company"] = $this->request->input("company");
-        $row["mobile"]  = $this->request->input("mobile");
-        $row["mobile2"] = $this->request->input("mobile2");
-        $row["area"]    = $this->request->input("area");
-        $row["note"]    = $this->request->input("note");
 
         return $this->db->insert($table, $row);
     }
@@ -73,13 +69,7 @@ class CustomerControl extends RestFullControl
     {
         $table = $this->table;
 
-        $row["group"]   = $this->request->input("group");
-        $row["name"]    = $this->request->input("name");
-        $row["company"] = $this->request->input("company");
-        $row["mobile"]  = $this->request->input("mobile");
-        $row["mobile2"] = $this->request->input("mobile2");
-        $row["area"]    = $this->request->input("area");
-        $row["note"]    = $this->request->input("note");
+        $row["note"] = $this->request->input("note");
 
         return $this->db->update($table, $row, ['id' => $id]);
     }
