@@ -44,6 +44,8 @@ Vue.mixin({
         pageLayout: 'total, sizes, prev, pager, next, jumper'
       },
       search: {
+        total: 0,
+        page: 1,
         pageSize: 10
       },
       formData: {},
@@ -90,8 +92,8 @@ Vue.mixin({
       this.searchLoading = true
       this.$request.get('/' + this.MODEL, { params: this.search }).then(r => {
         this.entries = r.data
-        this.total = r.total
-        this.page = r.page
+        this.search.total = r.total
+        this.search.page = r.page
       }).finally(r => {
         this.searchLoading = false
       })

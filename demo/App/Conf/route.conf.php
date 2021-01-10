@@ -11,6 +11,7 @@ return [
     "logout"       => ["c" => \App\Control\LoginControl::class, "m" => "logout"],
     "product"      => ["c" => \App\Control\PortalControl::class, "m" => "index"],
     "product/save" => ["c" => \App\Control\PortalControl::class, "m" => "save"],
+    "data/name"    => ["c" => \App\Control\DataNameControl::class, "m" => "name"],
 
 
     "customer/follow"      => ["c" => \App\Control\CustomerControl::class, "m" => "follow"],

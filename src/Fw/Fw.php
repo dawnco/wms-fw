@@ -53,7 +53,7 @@ class Fw
 
     private function exec()
     {
- 
+
         $this->route = new Route();
         $this->hook  = new Hook();
         $this->hook();
