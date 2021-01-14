@@ -90,6 +90,8 @@ class CustomerOrderControl extends RestFullControl
         $row["expressConsignee"] = $this->request->input("expressConsignee");
         $row["expressCode"]      = $this->request->input("expressCode");
         $row["expressNumber"]    = $this->request->input("expressNumber");
+        $row["expressDate"]      = $this->request->input("expressDate");
+        $row["consigneeDate"]    = $this->request->input("consigneeDate");
         $row["note"]             = $this->request->input("note");
 
 
