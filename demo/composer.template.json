@@ -1,4 +1,9 @@
 {
+  "require": {
+    "php": ">=7.4.0",
+    "dawnco/wms-fw": ">=1.0.1"
+  },
+  "license": "MIT",
   "autoload": {
     "files": [
       "app/Helper/function.php"

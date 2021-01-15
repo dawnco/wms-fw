@@ -37,7 +37,7 @@ class Logger
      * @param string $loggerName 日志名称
      * @return Logger
      */
-    public static function instance($loggerName = 'App')
+    public static function instance($loggerName = 'app')
     {
         if (!isset(self::$INS[$loggerName])) {
             self::$INS[$loggerName] = new self($loggerName);

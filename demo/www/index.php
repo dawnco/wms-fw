@@ -10,9 +10,7 @@ require dirname(dirname(__DIR__)) . "/vendor/autoload.php";
 use Wms\Fw\Conf;
 use Wms\Fw\Fw;
 
-$GLOBALS['REQUEST_METHOD'] = strtoupper($_SERVER['REQUEST_METHOD']);
-
-define("APP_PATH", dirname(__DIR__) . "/App");
+define("APP_PATH", dirname(__DIR__) . "/app");
 
 Conf::set('app', include APP_PATH . "/Conf/app.conf.php");
 Conf::set('route', include APP_PATH . "/Conf/route.conf.php");

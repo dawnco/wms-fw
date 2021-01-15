@@ -58,19 +58,19 @@ class Route
         }
 
         //去掉前缀
-        $base_uri = trim(Conf::get("App.base_uri"), " /");
+        $base_uri = trim(Conf::get("app.base_uri"), " /");
         if ($base_uri) {
             if (strpos($uri, $base_uri) === 0) {
                 $uri = substr($uri, strlen($base_uri));
             }
         }
 
+        $uri = trim($uri, "/");
+
         //默认路由
         if (!$uri) {
             $uri = "portal";
         }
-
-        $uri = trim($uri, "/");
 
         $this->uri = $uri;
         return $uri;
