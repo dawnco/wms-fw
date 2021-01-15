@@ -22,6 +22,17 @@ class CustomerControl extends RestFullControl
         $table   = $this->table;
         $fields  = "*";
         $where[] = ["AND `id` = ?", $this->request->input('id')];
+        $where[] = ["AND `group` = ?", $this->request->input('group')];
+
+        $keyword = $this->request->input('keyword');
+
+        if ($keyword) {
+            $where[] = ["AND (`name` LIKE ?l", $keyword];
+            $where[] = ["OR `company` LIKE ?l", $keyword];
+            $where[] = ["OR `mobile` LIKE ?l", $keyword];
+            $where[] = ["OR `mobile2` LIKE ?l", $keyword];
+            $where[] = ["OR `note` LIKE ?l)", $keyword];
+        }
 
         $page = $this->request->input('page', 1);
         $size = $this->request->input('pageSize', 10);
