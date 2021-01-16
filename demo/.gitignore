@@ -1,9 +1,0 @@
-node_modules
-.idea
-app.conf.php
-.sass-cache
-Runtime
-vendor
-composer.lock
-index.html
-router.js
