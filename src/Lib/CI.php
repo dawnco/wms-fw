@@ -55,9 +55,9 @@ class CI
 
     public function exec()
     {
-        $this->git("/www/loan-App-api/");
-        $this->git("/www/loan-App-test/");
-        $this->git("/www/loan-App-admin/");
+        $this->git("/www/loan-app-api/");
+        $this->git("/www/loan-app-test/");
+        $this->git("/www/loan-app-admin/");
         $this->git("/www/apply-test/");
     }
 
