@@ -13,7 +13,7 @@ app/conf/app.conf.php
 
 使用日志
 ```
-\wms\lib\Log::debug("%s log", "name");
+\Wms\Lib\Log::debug("%s log", "name");
 ```
 
 # 使用shell 例子
