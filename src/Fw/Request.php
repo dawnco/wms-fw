@@ -11,10 +11,15 @@ class Request
 {
 
     private $rawJson;
+    private $post;
+    private $get;
 
     public function __construct()
     {
         $this->rawJson = json_decode(file_get_contents("php://input"), true);
+        $this->rawJson = $this->trim($this->rawJson);
+        $this->post    = $this->trim($_POST);
+        $this->get     = $this->trim($_GET);
     }
 
     public function header($name, $default = null)
@@ -25,6 +30,12 @@ class Request
 
     public function input($key = null, $default = null)
     {
+
+        $val = $this->data($key);
+        if ($val !== null) {
+            return $val;
+        }
+
         $val = $this->post($key);
         if ($val !== null) {
             return $val;
@@ -35,31 +46,30 @@ class Request
             return $val;
         }
 
-        $val = $this->data($key);
-        if ($val !== null) {
-            return $val;
-        }
-
         return $default;
 
     }
 
+    /**
+     *  获取GET值 空字符串 则使用默认值
+     * @param null $key
+     * @param null $default
+     * @return array|string|null
+     */
     public function get($key = null, $default = null)
     {
-        if ($key == null) {
-            return $this->trim($_GET);
-        } else {
-            return isset($_GET[$key]) ? $this->trim($_GET[$key]) : null;
-        }
+        return $this->getValue($this->get, $key, $default);
     }
 
+    /**
+     * 获取POST值 空字符串 则使用默认值
+     * @param null $key
+     * @param null $default
+     * @return mixed
+     */
     public function post($key = null, $default = null)
     {
-        if ($key == null) {
-            return $this->trim($_POST);
-        } else {
-            return isset($_POST[$key]) ? $this->trim($_POST[$key]) : $default;
-        }
+        return $this->getValue($this->post, $key, $default);
     }
 
     public function getMethod()
@@ -67,12 +77,28 @@ class Request
         return strtoupper($_SERVER['REQUEST_METHOD'] ?? "GET");
     }
 
+    /**
+     * 获取JSON值 空字符串 则使用默认值
+     * @param null $key
+     * @param null $default
+     * @return mixed
+     */
     public function data($key = null, $default = null)
     {
+        return $this->getValue($this->rawJson, $key, $default);
+    }
+
+    private function getValue($data, $key, $default)
+    {
         if ($key === null) {
-            return $this->rawJson;
+            return $data;
         } else {
-            return $this->rawJson[$key] ?? $default;
+            if (isset($data[$key])) {
+                $value = $data[$key];
+                return $value === '' ? $default : $value;
+            } else {
+                return $default;
+            }
         }
     }
 
