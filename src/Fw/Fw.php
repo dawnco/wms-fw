@@ -34,8 +34,11 @@ class Fw
 
         set_error_handler([$this, 'errorHandler']);
 
-        $request  = new Request();
-        $response = new Response();
+        $request = new Request();
+
+        $responseCls = Conf::get('app.response.handler', Response::class);
+        $response    = new $responseCls();
+
         try {
             $body = $this->exec($request);
             $response->sendJson(0, null, $body);
