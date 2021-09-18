@@ -43,7 +43,7 @@ class Fw
             $body = $this->exec($request);
             $response->sendJson(0, null, $body);
         } catch (DatabaseException $e) {
-            $response->sendJson($e->getCode(), "DATABASE OPERATE ERROR");
+            $response->sendJson($e->getCode(), Conf::get('app.env') == 'dev' ? $e->getMessage() : "DATABASE OPERATE ERROR");
             Log::error("%s %s", "DATABASE OPERATE ERROR", $e);
         } catch (WmsException $e) {
             $response->sendJson($e->getCode(), $e->getMessage());
