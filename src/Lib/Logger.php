@@ -7,6 +7,7 @@
 namespace Wms\Lib;
 
 
+use Throwable;
 use Wms\Fw\Conf;
 
 class Logger
@@ -23,14 +24,14 @@ class Logger
     private function __construct($loggerName = "")
     {
         $this->loggerName = $loggerName;
-        $this->dir        = Conf::get('app.log.dir') ?: (APP_PATH . "/Runtime");
-        $level            = [
-            'debug'   => 1,
-            'info'    => 2,
+        $this->dir = Conf::get('app.log.dir') ?: (APP_PATH . "/Runtime");
+        $level = [
+            'debug' => 1,
+            'info' => 2,
             'warning' => 3,
-            'error'   => 4,
+            'error' => 4,
         ];
-        $this->level      = $level[Conf::get('app.log.level')] ?? 1;
+        $this->level = $level[Conf::get('app.log.level')] ?? 1;
     }
 
     /**
@@ -76,12 +77,12 @@ class Logger
     protected function format($msg, $arg)
     {
         foreach ($arg as $k => $v) {
-            if ($v instanceof \Throwable) {
+            if ($v instanceof Throwable) {
                 $arg[$k] = sprintf("ExceptionCode: %s ExceptionMessage: %s\n    ExceptionTrace:\n    %s",
                     $v->getCode(),
                     $v->getMessage(),
                     str_replace("\n", "\n    ", $v->getTraceAsString())
-                    );
+                );
             }
         }
         return vsprintf($msg, $arg);

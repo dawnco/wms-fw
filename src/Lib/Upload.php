@@ -3,33 +3,37 @@
 namespace Wumashi\Lib;
 
 /**
- *
  * @author  Dawnc
  * @date    2014-04-29
  */
-class Upload {
+class Upload
+{
 
     private $__uploadName = "file";
-    private $__allowExt   = "jpg,gif,png,jpeg";
-    private $__maxSize    =  1048576; // 1M
+    private $__allowExt = "jpg,gif,png,jpeg";
+    private $__maxSize = 1048576; // 1M
 
-    private $__error      = "";
+    private $__error = "";
 
-    private $__UPFILE     = array();
+    private $__UPFILE = array();
 
-    public function __construct(){
+    public function __construct()
+    {
 
     }
 
-    public function getError(){
+    public function getError()
+    {
         return $this->__error;
     }
 
-    public function setName($name){
+    public function setName($name)
+    {
         $this->__uploadName = $name;
     }
 
-    public function setAllowExt($ext){
+    public function setAllowExt($ext)
+    {
         $this->__allowExt = $ext;
     }
 
@@ -37,40 +41,42 @@ class Upload {
      * 允许上传大小
      * @param type $size 单位 M
      */
-    public function setMaxSize($size){
+    public function setMaxSize($size)
+    {
         $this->__maxSize = $size * 1024 * 1024;
     }
 
-    private function __errorCode($code){
+    private function __errorCode($code)
+    {
         switch ($code) {
             case UPLOAD_ERR_INI_SIZE:
                 $message = "上传文件太大";
-                break;
+            break;
             case UPLOAD_ERR_FORM_SIZE:
                 $message = "上传文件太大";
-                break;
+            break;
             case UPLOAD_ERR_PARTIAL:
                 $message = "文件只有部分被上传";
-                break;
+            break;
             case UPLOAD_ERR_NO_FILE:
                 $message = "没有文件被上传";
-                break;
+            break;
             case UPLOAD_ERR_NO_TMP_DIR:
                 $message = "找不到临时文件夹";
-                break;
+            break;
             case UPLOAD_ERR_CANT_WRITE:
                 $message = "文件写入失败";
-                break;
+            break;
             default:
                 $message = "未知错误";
-                break;
+            break;
         }
         return $message;
     }
 
-    private function __init(){
+    private function __init()
+    {
         $_FILES_UP1 = isset($_FILES[$this->__uploadName]) ? $_FILES[$this->__uploadName] : false;
-
 
 
         if (!$_FILES_UP1) {
@@ -78,7 +84,7 @@ class Upload {
             return false;
         }
 
-        if($_FILES_UP1['error'] != 0){
+        if ($_FILES_UP1['error'] != 0) {
             $this->__error = $this->__errorCode($_FILES_UP1['error']);
             return false;
         }
@@ -91,8 +97,8 @@ class Upload {
         //检查扩展名
         $ext = strtolower(substr($_FILES_UP1['name'], strrpos($_FILES_UP1['name'], ".") + 1));
 
-        $this->__UPFILE['ext']  = $ext;
-        $this->__UPFILE['name'] = substr($_FILES_UP1['name'],0 ,strrpos($_FILES_UP1['name'], "."));
+        $this->__UPFILE['ext'] = $ext;
+        $this->__UPFILE['name'] = substr($_FILES_UP1['name'], 0, strrpos($_FILES_UP1['name'], "."));
 
         $allow_ext = explode(",", $this->__allowExt);
         if (!in_array($ext, $allow_ext)) {
@@ -116,28 +122,32 @@ class Upload {
      * @param type $file
      * @return type
      */
-    public function create(){
-        $isupload =  $this->__init();
-        if($isupload){
-            $data['ext']    = $this->__UPFILE['ext'];
-            $data['name']   = $this->__UPFILE['name'];
+    public function create()
+    {
+        $isupload = $this->__init();
+        if ($isupload) {
+            $data['ext'] = $this->__UPFILE['ext'];
+            $data['name'] = $this->__UPFILE['name'];
             return $data;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public function md5(){
+    public function md5()
+    {
         return md5_file($this->__UPFILE['tmp_name']);
     }
 
-    public function sha1(){
+    public function sha1()
+    {
         return sha1_file($this->__UPFILE['tmp_name']);
     }
 
-    public function save($file){
+    public function save($file)
+    {
 
-        if($this->__error){
+        if ($this->__error) {
             return false;
         }
 
@@ -152,7 +162,8 @@ class Upload {
      * 获取内容
      * @return type
      */
-    public function getContent() {
+    public function getContent()
+    {
         return file_get_contents($this->__UPFILE['tmp_name']);
     }
 }

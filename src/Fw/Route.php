@@ -36,9 +36,9 @@ class Route
         foreach ($rules as $u => $r) {
             $matches = array();
             if (preg_match("#^$u$#", $uri, $matches)) {
-                $params        = $this->param($r, $matches);
+                $params = $this->param($r, $matches);
                 $this->control = $r['c'];
-                $this->param   = $params;
+                $this->param = $params;
                 return null;
             }
         }
@@ -82,7 +82,7 @@ class Route
     {
 
         $this->control = $rule['c'];
-        $this->method  = isset($rule['m']) ? $rule['m'] : 'index';
+        $this->method = isset($rule['m']) ? $rule['m'] : 'index';
 
         $url_param = array_slice($matches, 1);
         //合并参数

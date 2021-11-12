@@ -8,11 +8,13 @@
 namespace Wms\Lib;
 
 
+use Exception;
+
 class Mutex
 {
-    private $redis  = null;
+    private $redis = null;
     private $prefix = "mutex:";
-    private $name   = '';
+    private $name = '';
 
     // 锁过期时间 预防逻辑处理卡死没解锁
     private $lockExpire = 8000;  // 毫秒 1s = 1000ms
@@ -24,7 +26,7 @@ class Mutex
      */
     public function __construct($name, $redis = null)
     {
-        $this->name  = $name;
+        $this->name = $name;
         $this->redis = $redis ?: Redis::getInstance();
     }
 
@@ -32,19 +34,19 @@ class Mutex
      * 获得锁的 执行 success 没有执行 fail
      * @param      $success
      * @param null $fail
-     * @throws \Exception
+     * @throws Exception
      */
     public function call($success, $fail = null)
     {
         $lock = $this->lock();
 
         $exception = null;
-        $result    = null;
+        $result = null;
 
         if ($lock) {
             try {
                 $result = $success();
-            } catch (\Exception $exp) {
+            } catch (Exception $exp) {
                 $exception = $exp;
             } finally {
                 $this->unlock();
@@ -66,7 +68,7 @@ class Mutex
      * 等待一个操作,未获得锁则继续等待
      * @param $callback
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function synchronized($callback)
     {
@@ -81,7 +83,7 @@ class Mutex
         $exception = null;
         try {
             $result = $callback();
-        } catch (\Exception $exp) {
+        } catch (Exception $exp) {
             $exception = $exp;
         } finally {
             $this->unlock();

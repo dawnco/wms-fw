@@ -36,7 +36,7 @@ class WmsMQ
     public static function push($name, $data, $size = 0, $expire = 0)
     {
         $redis = self::redis();
-        $key   = self::key($name);
+        $key = self::key($name);
 
         if ($size == 1) {
             throw  new WmsException("queue size must greater than 1");
@@ -88,8 +88,8 @@ EOT;
      */
     public static function pop($name)
     {
-        $redis   = self::redis();
-        $key     = self::key($name);
+        $redis = self::redis();
+        $key = self::key($name);
         $message = $redis->rPop($key);
         return $message === false ? false : json_decode($message, true);
     }
@@ -102,7 +102,7 @@ EOT;
     public static function list($name, $start = 0, $end = -1)
     {
         $redis = self::redis();
-        $key   = self::key($name);
+        $key = self::key($name);
 
         $data = $redis->lRange($key, $start, $end);
         if ($data) {
@@ -119,7 +119,7 @@ EOT;
     public static function size($name)
     {
         $redis = Redis::getInstance(Conf::get("db.queue"));
-        $key   = self::key($name);
+        $key = self::key($name);
         return $redis->lLen($key);
     }
 }

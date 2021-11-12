@@ -75,8 +75,8 @@ class TreeArr
             $id =
             $this->data[$key] = [
                 "name" => array_pop($arr),//名称
-                "pid"  => $this->genId($arr), //pid
-                "id"   => $this->id(), //id
+                "pid" => $this->genId($arr), //pid
+                "id" => $this->id(), //id
             ];
         }
 
@@ -93,7 +93,7 @@ class TreeArr
     public function demo()
     {
 
-        $arr  = [
+        $arr = [
             ["四川", "成都", "武侯区",],
             ["四川", "成都", "青羊区"],
             ["重庆", "渝北"],

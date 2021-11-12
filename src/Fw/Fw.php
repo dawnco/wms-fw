@@ -6,6 +6,7 @@
 
 namespace Wms\Fw;
 
+use Exception;
 use Wms\Database\DatabaseException;
 use Wms\Lib\Log;
 
@@ -13,7 +14,7 @@ class Fw
 {
     public static $application = null;
 
-    public $hook  = null;
+    public $hook = null;
     public $route = null;
 
     public static function instance()
@@ -36,7 +37,7 @@ class Fw
         $request = new Request();
 
         $responseCls = Conf::get('app.response.handler', Response::class);
-        $response    = new $responseCls();
+        $response = new $responseCls();
 
         try {
             $body = $this->exec($request);
@@ -47,7 +48,7 @@ class Fw
         } catch (WmsException $e) {
             $response->sendJson($e->getCode(), $e->getMessage());
             Log::info("%s", $e);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $response->status(500)->send($e->getMessage());
             Log::info("Exception %s", $e);
 
@@ -58,14 +59,14 @@ class Fw
     {
 
         $this->route = new Route();
-        $this->hook  = new Hook();
+        $this->hook = new Hook();
         $this->hook();
 
         $this->hook->handle('pre_control');
 
         $control = $this->route->getControl();
-        $method  = $this->route->getMethod();
-        $param   = $this->route->getParam();
+        $method = $this->route->getMethod();
+        $param = $this->route->getParam();
         if (!class_exists($control)) {
             throw new WmsException($control . " File Not Found");
         }
@@ -86,7 +87,7 @@ class Fw
 
     public function shell($argv)
     {
-        $name    = $argv[1];
+        $name = $argv[1];
         $clsName = "\\App\\Shell\\" . $name;
         if (!class_exists($clsName)) {
             throw new WmsException("$clsName SHELL 不存在");

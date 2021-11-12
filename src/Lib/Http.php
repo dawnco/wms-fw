@@ -21,7 +21,7 @@ class Http
     {
 
         $userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0";
-        $header    = array('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8');
+        $header = array('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8');
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -52,13 +52,14 @@ class Http
             }
         }
 
-        $output     = curl_exec($ch);
+        $output = curl_exec($ch);
         $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error      = curl_error($ch);
+        $error = curl_error($ch);
         curl_close($ch);
 
         if ($output === false || $httpStatus != 200) {
-            throw new WmsException("network error httpStatus: $httpStatus: error: $error url: $url", ErrorCode::NETWORK_ERROR);
+            throw new WmsException("network error httpStatus: $httpStatus: error: $error url: $url",
+                ErrorCode::NETWORK_ERROR);
         }
 
         return $output;

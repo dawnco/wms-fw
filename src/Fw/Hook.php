@@ -26,8 +26,8 @@ class Hook
         }
 
         $this->callbacks[$name][] = [
-            "callback"  => $callback,
-            "seq"       => $seq,
+            "callback" => $callback,
+            "seq" => $seq,
             "parameter" => $parameter,
         ];
 

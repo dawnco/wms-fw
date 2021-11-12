@@ -7,7 +7,8 @@ namespace Wumashi\Lib;
  * @author  Dawnc
  * @date    2015-04-14
  */
-class Crumb {
+class Crumb
+{
 
     private static $__data = array();
 
@@ -17,11 +18,13 @@ class Crumb {
      * @param type $url  链接
      * @param type $data 数据
      */
-    public static function add($name, $url = false, $data = array()) {
+    public static function add($name, $url = false, $data = array())
+    {
         self::$__data[] = array("name" => $name, "url" => $url, "data" => $data);
     }
 
-    public static function data() {
+    public static function data()
+    {
         return self::$__data;
     }
 
@@ -31,7 +34,8 @@ class Crumb {
      * @param type $sp    分隔符
      * @return string
      */
-    public static function html($local = "您当前位置 : ", $sp = " &gt; ") {
+    public static function html($local = "您当前位置 : ", $sp = " &gt; ")
+    {
         $html = array();
 
 
@@ -47,7 +51,8 @@ class Crumb {
                 }
             }
 
-            $str = '<div class="crumb"><span class="crumb-title">' . $local . "</span>" . implode($sp, $html) . "</div>";
+            $str =
+                '<div class="crumb"><span class="crumb-title">' . $local . "</span>" . implode($sp, $html) . "</div>";
         } else {
             $str = "";
         }

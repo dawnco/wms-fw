@@ -28,7 +28,7 @@ class Base64Image
     function base64($imageFile)
     {
         $info = getimagesize($imageFile);
-        $src  = "data:{$info['mime']};base64," . base64_encode(file_get_contents($imageFile));
+        $src = "data:{$info['mime']};base64," . base64_encode(file_get_contents($imageFile));
         return $src;
     }
 

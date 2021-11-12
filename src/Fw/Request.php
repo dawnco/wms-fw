@@ -18,8 +18,8 @@ class Request
     {
         $this->rawJson = json_decode(file_get_contents("php://input"), true);
         $this->rawJson = $this->trim($this->rawJson);
-        $this->post    = $this->trim($_POST);
-        $this->get     = $this->trim($_GET);
+        $this->post = $this->trim($_POST);
+        $this->get = $this->trim($_GET);
     }
 
     public function header($name, $default = null)

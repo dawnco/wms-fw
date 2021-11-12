@@ -11,9 +11,9 @@ class Mysqli extends Database implements IDatabase
     /**
      * @var \mysqli
      */
-    private $link  = null;
-    public  $error = [];
-    public  $sql   = null;
+    private $link = null;
+    public $error = [];
+    public $sql = null;
 
     protected $conf = [];
 
@@ -27,11 +27,11 @@ class Mysqli extends Database implements IDatabase
     protected function connect()
     {
         $hostname = $this->conf['hostname'];
-        $port     = $this->conf['port'];
+        $port = $this->conf['port'];
         $username = $this->conf['username'];
         $password = $this->conf['password'];
         $database = $this->conf['database'];
-        $charset  = $this->conf['charset'];
+        $charset = $this->conf['charset'];
 
         $this->link->init();
         // 结果int 不转为 string
@@ -41,6 +41,10 @@ class Mysqli extends Database implements IDatabase
             throw new DatabaseException("database connect error: $hostname $database");
         }
         $this->link->set_charset($charset);
+
+        if (isset($this->conf['timezone'])) {
+            $this->link->query(sprintf("SET time_zone '%s'", $this->conf['timezone']));
+        }
     }
 
     /**
@@ -52,7 +56,7 @@ class Mysqli extends Database implements IDatabase
     public function getLine($query, $bind = null)
     {
 
-        $query  = $this->prepare($query, $bind);
+        $query = $this->prepare($query, $bind);
         $result = $this->exec($query);
 
         if (!$result) {
@@ -71,22 +75,22 @@ class Mysqli extends Database implements IDatabase
      * @param string $index
      * @param string $field
      */
-    public function getLineBy($table, $value, $index = "id", $field = "*")
+    public function getLineBy($table, $value, $index = "id", $field = " * ")
     {
         $query = "SELECT $field FROM `$table` WHERE `$index` = ?s ";
         return $this->getLine($this->prepare($query, array($value)));
     }
 
-    public function getLineByWhere($table, $where, $field = "*", $order = 'id DESC')
+    public function getLineByWhere($table, $where, $field = " * ", $order = 'id DESC')
     {
-        $rows = $this->getDataByWhere($table, $where, $field = "*", $order, "LIMIT 1");
+        $rows = $this->getDataByWhere($table, $where, $field = " * ", $order, "LIMIT 1");
         return $rows ? $rows[0] : false;
     }
 
-    public function getDataByWhere($table, $where, $field = "*", $order = 'id DESC', $limit = '')
+    public function getDataByWhere($table, $where, $field = " * ", $order = 'id DESC', $limit = '')
     {
         $where_sql = $this->where($where);
-        $query     = "SELECT $field FROM `$table` WHERE $where_sql ORDER BY $order $limit";
+        $query = "SELECT $field FROM `$table` WHERE $where_sql ORDER BY $order $limit";
         return $this->getData($query);
     }
 
@@ -99,7 +103,7 @@ class Mysqli extends Database implements IDatabase
     public function getVar($query, $bind = null)
     {
         $query = $this->prepare($query, $bind);
-        $line  = $this->getLine($query);
+        $line = $this->getLine($query);
         return $line ? array_shift($line) : false;
     }
 
@@ -113,7 +117,7 @@ class Mysqli extends Database implements IDatabase
     {
         $data = [];
 
-        $query  = $this->prepare($query, $bind);
+        $query = $this->prepare($query, $bind);
         $result = $this->exec($query, $this->link);
         if (!$result) {
             return $data;
@@ -136,15 +140,15 @@ class Mysqli extends Database implements IDatabase
     public function insert($table, $data)
     {
         $insert_fields = array();
-        $insert_data   = array();
+        $insert_data = array();
         foreach ($data as $field => $value) {
             $insert_fields[] = "`{$field}`";
-            $insert_data[]   = '"' . $this->escape($value) . '"';
+            $insert_data[] = '"' . $this->escape($value) . '"';
         }
         $insert_fields = implode(', ', $insert_fields);
-        $insert_data   = implode(', ', $insert_data);
-        $query         = "INSERT INTO `{$table}` ({$insert_fields}) values ({$insert_data});";
-        $result        = $this->exec($query);
+        $insert_data = implode(', ', $insert_data);
+        $query = "INSERT INTO `{$table}` ({$insert_fields}) values({$insert_data});";
+        $result = $this->exec($query);
 
         if ($result) {
             return $this->link->insert_id;
@@ -195,7 +199,7 @@ class Mysqli extends Database implements IDatabase
             $insert_data_str[] = "(" . implode(', ', $insert_data) . ")";
         }
 
-        $query  = "INSERT INTO `{$table}` ({$insert_fields}) values " . implode(",", $insert_data_str) . ";";
+        $query = "INSERT INTO `{$table}` ({$insert_fields}) values " . implode(",", $insert_data_str) . ";";
         $result = $this->exec($query);
         return $result;
     }
@@ -225,7 +229,7 @@ class Mysqli extends Database implements IDatabase
             $insert_data_str[] = "(" . implode(', ', $insert_data) . ")";
         }
 
-        $query  = "INSERT IGNORE INTO `{$table}` ({$insert_fields}) values " . implode(",", $insert_data_str) . ";";
+        $query = "INSERT IGNORE INTO `{$table}` ({$insert_fields}) values " . implode(",", $insert_data_str) . ";";
         $result = $this->exec($query);
         return $result;
     }
@@ -245,17 +249,18 @@ class Mysqli extends Database implements IDatabase
     {
 
         $sql_where = $this->where($where);
-        $total     = $this->getVar("SELECT count(*) FROM `$table` WHERE " . $sql_where);
+        $total = $this->getVar("SELECT count(*) FROM `$table` WHERE " . $sql_where);
 
-        $size  = abs($size) ?: 1;
+        $size = abs($size) ?: 1;
         $start = abs(($page ?: 1) - 1) * $size;
 
         $data['total'] = (int)$total;
-        $data['page']  = (int)$page;
+        $data['page'] = (int)$page;
 
         $entries = [];
 
-        $query  = "SELECT {$fields} FROM `$table` WHERE $sql_where ORDER BY $order LIMIT $start, $size";
+        $query = "SELECT {
+                $fields} FROM `$table` WHERE $sql_where ORDER BY $order LIMIT $start, $size";
         $result = $this->exec($query, $this->link);
         if ($result) {
             while ($row = $result->fetch_assoc()) {
@@ -282,21 +287,29 @@ class Mysqli extends Database implements IDatabase
      * @return array
      * @author  Dawnc
      */
-    public function getJoinPageData($table, $join = '', $where = [], $page = 1, $size = 10, $order = "id DESC", $fields = '*')
-    {
+    public function getJoinPageData(
+        $table,
+        $join = '',
+        $where = [],
+        $page = 1,
+        $size = 10,
+        $order = "id DESC",
+        $fields = '*'
+    ) {
 
         $sql_where = $this->where($where);
-        $total     = $this->getVar("SELECT count(a.id) FROM $table $join WHERE " . $sql_where);
+        $total = $this->getVar("SELECT count(a . id) FROM $table $join WHERE " . $sql_where);
 
-        $size  = abs($size) ?: 1;
+        $size = abs($size) ?: 1;
         $start = abs(($page ?: 1) - 1) * $size;
 
         $data['total'] = (int)$total;
-        $data['page']  = (int)$page;
+        $data['page'] = (int)$page;
 
         $entries = [];
 
-        $query  = "SELECT {$fields} FROM $table $join WHERE $sql_where ORDER BY $order LIMIT $start, $size";
+        $query = "SELECT {
+                $fields} FROM $table $join WHERE $sql_where ORDER BY $order LIMIT $start, $size";
         $result = $this->exec($query, $this->link);
         if ($result) {
             while ($row = $result->fetch_assoc()) {
@@ -320,16 +333,16 @@ class Mysqli extends Database implements IDatabase
      */
     public function update($table, $data, $where)
     {
-        $update_data  = array();
+        $update_data = array();
         $update_where = array();
         foreach ($data as $field => $value) {
-            $update_data[] = sprintf('`%s` = "%s"', $field, $this->escape($value));
+            $update_data[] = sprintf('`%s` = " % s"', $field, $this->escape($value));
         }
         $update_data = implode(', ', $update_data);
 
         if (is_array($where)) {
             foreach ($where as $field => $value) {
-                $update_where[] = sprintf('`%s` = "%s"', $field, $this->escape($value));
+                $update_where[] = sprintf('`%s` = " % s"', $field, $this->escape($value));
             }
             $update_where = 'WHERE ' . implode(' AND ', $update_where);
         } elseif (is_numeric($where)) {
@@ -337,7 +350,9 @@ class Mysqli extends Database implements IDatabase
         } else {
             throw new DatabaseException("Db Not Specified Where", 500);
         }
-        $query = "UPDATE `{$table}` SET {$update_data} {$update_where}";
+        $query = "UPDATE `{$table}` SET {
+                $update_data} {
+                $update_where}";
 
         return $this->exec($query);
     }
@@ -348,7 +363,7 @@ class Mysqli extends Database implements IDatabase
         if (is_array($where)) {
             $delete_where = array();
             foreach ($where as $field => $value) {
-                $delete_where[] = sprintf('`%s` = "%s"', $field, $this->escape($value));
+                $delete_where[] = sprintf('`%s` = " % s"', $field, $this->escape($value));
             }
             $delete_where = 'WHERE ' . implode(' AND ', $delete_where);
         } elseif (is_numeric($where)) {
@@ -368,13 +383,13 @@ class Mysqli extends Database implements IDatabase
      */
     private function exec($query)
     {
-        $start  = microtime(true);
+        $start = microtime(true);
         $result = $this->link->query($query);
         if ($result === false) {
-            $error = sprintf("%s : %s [%s]", $this->link->errno, $this->link->error, $query);
+            $error = sprintf(" % s : %s [%s]", $this->link->errno, $this->link->error, $query);
             throw new DatabaseException($error);
         }
-        $end         = microtime(true);
+        $end = microtime(true);
         $this->sql[] = "[" . substr(($end - $start) * 1000, 0, 5) . "ms] " . $query;
         return $result;
     }
@@ -387,7 +402,7 @@ class Mysqli extends Database implements IDatabase
      */
     public function query($query, $bind = null)
     {
-        $query  = $this->prepare($query, $bind);
+        $query = $this->prepare($query, $bind);
         $result = $this->exec($query);
         return $result;
     }
@@ -429,7 +444,7 @@ class Mysqli extends Database implements IDatabase
     public function commit()
     {
         $this->sql[] = "commit";
-        $result      = $this->link->commit();
+        $result = $this->link->commit();
         $this->link->autocommit(true);
         return $result;
     }
@@ -441,13 +456,18 @@ class Mysqli extends Database implements IDatabase
     public function rollback()
     {
         $this->sql[] = "rollback";
-        $result      = $this->link->rollback();
+        $result = $this->link->rollback();
         return $result;
     }
 
     public function debug()
     {
-        var_dump($this->sql);
+        return $this->sql;
+    }
+
+    public function cleanDebug()
+    {
+        $this->sql = [];
     }
 
     public function ping()

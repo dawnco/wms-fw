@@ -7,14 +7,16 @@ namespace Wumashi\Lib;
  * @author  Dawnc
  * @date    2014-05-22
  */
-class Validator {
+class Validator
+{
 
     /**
      * 是否邮箱
      * @param type $val
      * @return type
      */
-    public static function mail($val){
+    public static function mail($val)
+    {
         return preg_match('/^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$/', $val) > 0 ? true : false;
     }
 
@@ -24,8 +26,9 @@ class Validator {
      * @param type $val
      * @return type
      */
-    public static function required($val){
-         return ($val == null || trim($val) == '' || strlen($val) <= 0) ? false : true;
+    public static function required($val)
+    {
+        return ($val == null || trim($val) == '' || strlen($val) <= 0) ? false : true;
     }
 
     /**
@@ -34,9 +37,10 @@ class Validator {
      * @param type $min
      * @return type
      */
-    public static function minlen($val, $min){
+    public static function minlen($val, $min)
+    {
         $len = mb_strlen($val, "UTF-8");
-        return   $len >= $min ? true : false;
+        return $len >= $min ? true : false;
     }
 
     /**
@@ -45,25 +49,30 @@ class Validator {
      * @param type $max
      * @return type
      */
-    public static function maxlen($val, $max){
+    public static function maxlen($val, $max)
+    {
         $len = mb_strlen($val, "UTF-8");
-        return  $len <= $max ? true : false;
+        return $len <= $max ? true : false;
     }
 
-    public static function rangelen($val, $min, $max){
+    public static function rangelen($val, $min, $max)
+    {
         $len = mb_strlen($val, "UTF-8");
-        return   ($len >= $min  &&  $len <= $max) ? true : false;
+        return ($len >= $min && $len <= $max) ? true : false;
     }
 
-    public static function url($url){
-         return (preg_match('/^https?:\/\/[\d\-a-zA-Z]+(\.[\d\-a-zA-Z]+)*\/?$/', $url) > 0) ? true : false;
+    public static function url($url)
+    {
+        return (preg_match('/^https?:\/\/[\d\-a-zA-Z]+(\.[\d\-a-zA-Z]+)*\/?$/', $url) > 0) ? true : false;
     }
 
-    public static function mobile($mobile){
-         return (preg_match('/^1[0-9]{10,10}$/', $mobile) > 0) ? true : false;
+    public static function mobile($mobile)
+    {
+        return (preg_match('/^1[0-9]{10,10}$/', $mobile) > 0) ? true : false;
     }
 
-    public static function equal($str1, $str2){
+    public static function equal($str1, $str2)
+    {
         return strcasecmp($str1, $str2) == 0 ? true : false;
     }
 }

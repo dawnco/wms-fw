@@ -24,14 +24,14 @@ class CI
         swoole_set_process_name("sw-ci-git-pull");
         $http = new Server("0.0.0.0", 8008);
         $http->set(array(
-            'reactor_num'   => 1,
-            'worker_num'    => 1,
-            'backlog'       => 128,
-            'max_request'   => 50,
+            'reactor_num' => 1,
+            'worker_num' => 1,
+            'backlog' => 128,
+            'max_request' => 50,
             'dispatch_mode' => 1,
-            'daemonize'     => 1,
-            'log_level'     => SWOOLE_LOG_ERROR,
-            'log_file'      => "/data/log/git-pull.log",
+            'daemonize' => 1,
+            'log_level' => SWOOLE_LOG_ERROR,
+            'log_file' => "/data/log/git-pull.log",
         ));
         $http->set(['enable_coroutine' => true]);
         $http->on('request', function ($request, $response) {
@@ -63,7 +63,7 @@ class CI
 
     protected function git($dir)
     {
-        $output     = [];
+        $output = [];
         $return_var = 0;
         exec("git --git-dir=$dir/.git --work-tree=$dir pull", $output, $return_var);
         echo date('Y-m-d H:i:s');

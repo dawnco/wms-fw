@@ -6,9 +6,9 @@
 
 namespace Wms\Fw;
 
-use Wms\Lib\Log;
+use Exception;
 
-class WmsException extends \Exception
+class WmsException extends Exception
 {
 
     protected $data = null;

@@ -30,16 +30,18 @@ class Sms
         }
 
         $redis = Redis::getInstance();
-        $last  = $redis->get('sms:last:' . $phone);
-        $now   = time();
+        $last = $redis->get('sms:last:' . $phone);
+        $now = time();
         if ($last && $now - $last < self::SEND_NEXT_TIME) {
-            throw new WmsException(sprintf("Sending too frequently, retrying after %d seconds!", self::SEND_NEXT_TIME), ErrorCode::SMS_SEND_ERROR);
+            throw new WmsException(sprintf("Sending too frequently, retrying after %d seconds!", self::SEND_NEXT_TIME),
+                ErrorCode::SMS_SEND_ERROR);
         }
 
         // 同一个手机号每天发送限制发送10条短信
         $times = $redis->get('sms:stat:' . date("d", $now) . ":" . $phone);
         if ($times > self::SEND_MAX_DAY) {
-            throw new WmsException("The number of SMS messages for this mobile phone number has reached the upper limit today!", ErrorCode::SMS_SEND_ERROR);
+            throw new WmsException("The number of SMS messages for this mobile phone number has reached the upper limit today!",
+                ErrorCode::SMS_SEND_ERROR);
         }
 
         //生成验证码
