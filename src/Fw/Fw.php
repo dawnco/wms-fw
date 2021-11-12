@@ -24,8 +24,7 @@ class Fw
 
     public function __construct()
     {
-        date_default_timezone_set('PRC');
-
+        date_default_timezone_set(Conf::get('app.timezone', 'PRC'));
     }
 
 

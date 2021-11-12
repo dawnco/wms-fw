@@ -20,7 +20,7 @@ class CI
 {
     public function start()
     {
-        date_default_timezone_set('PRC');
+
         swoole_set_process_name("sw-ci-git-pull");
         $http = new Server("0.0.0.0", 8008);
         $http->set(array(
