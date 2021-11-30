@@ -336,13 +336,13 @@ class Mysqli extends Database implements IDatabase
         $update_data = array();
         $update_where = array();
         foreach ($data as $field => $value) {
-            $update_data[] = sprintf('`%s` = " % s"', $field, $this->escape($value));
+            $update_data[] = sprintf('`%s` = "%s"', $field, $this->escape($value));
         }
         $update_data = implode(', ', $update_data);
 
         if (is_array($where)) {
             foreach ($where as $field => $value) {
-                $update_where[] = sprintf('`%s` = " % s"', $field, $this->escape($value));
+                $update_where[] = sprintf('`%s` = "%s"', $field, $this->escape($value));
             }
             $update_where = 'WHERE ' . implode(' AND ', $update_where);
         } elseif (is_numeric($where)) {
@@ -350,9 +350,7 @@ class Mysqli extends Database implements IDatabase
         } else {
             throw new DatabaseException("Db Not Specified Where", 500);
         }
-        $query = "UPDATE `{$table}` SET {
-                $update_data} {
-                $update_where}";
+        $query = "UPDATE `{$table}` SET {$update_data} {$update_where}";
 
         return $this->exec($query);
     }
@@ -363,7 +361,7 @@ class Mysqli extends Database implements IDatabase
         if (is_array($where)) {
             $delete_where = array();
             foreach ($where as $field => $value) {
-                $delete_where[] = sprintf('`%s` = " % s"', $field, $this->escape($value));
+                $delete_where[] = sprintf('`%s` = "%s"', $field, $this->escape($value));
             }
             $delete_where = 'WHERE ' . implode(' AND ', $delete_where);
         } elseif (is_numeric($where)) {
@@ -386,7 +384,7 @@ class Mysqli extends Database implements IDatabase
         $start = microtime(true);
         $result = $this->link->query($query);
         if ($result === false) {
-            $error = sprintf(" % s : %s [%s]", $this->link->errno, $this->link->error, $query);
+            $error = sprintf(" %s : %s [%s]", $this->link->errno, $this->link->error, $query);
             throw new DatabaseException($error);
         }
         $end = microtime(true);
