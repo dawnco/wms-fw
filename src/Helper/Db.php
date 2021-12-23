@@ -72,18 +72,17 @@ class Db
         return static::getDb()->insertBatch($table, $data);
     }
 
-    public static function update(string $table, array $data, array $where): int
+    public static function update(string $table, array $data, array $where)
     {
         static::getDb()->update($table, $data, $where);
-        return 1;
     }
 
-    public static function delete(string $table, array $where): int
+    public static function delete(string $table, array $where)
     {
         return static::getDb()->delete($table, $where);
     }
 
-    public static function query(string $sql, array $bind = []): int
+    public static function query(string $sql, array $bind = [])
     {
         return static::getDb()->query($sql, $bind);
     }
