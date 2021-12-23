@@ -67,7 +67,7 @@ class Db
         return static::getDb()->insert($table, $data);
     }
 
-    public static function insertBatch(string $table, array $data): int
+    public static function insertBatch(string $table, array $data)
     {
         return static::getDb()->insertBatch($table, $data);
     }
