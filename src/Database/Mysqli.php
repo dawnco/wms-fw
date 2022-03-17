@@ -49,8 +49,8 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 获取一行数据
-     * @param type $query
-     * @param type $bind
+     * @param string $query
+     * @param array|null  $bind
      * @return boolean
      */
     public function getLine($query, $bind = null)
@@ -81,12 +81,29 @@ class Mysqli extends Database implements IDatabase
         return $this->getLine($this->prepare($query, array($value)));
     }
 
+
+    /**
+     * @param string $table
+     * @param array  $where
+     * @param string $field
+     * @param string $order
+     * @return false|mixed
+     */
     public function getLineByWhere($table, $where, $field = " * ", $order = 'id DESC')
     {
         $rows = $this->getDataByWhere($table, $where, $field = " * ", $order, "LIMIT 1");
         return $rows ? $rows[0] : false;
     }
 
+
+    /**
+     * @param string $table
+     * @param array  $where
+     * @param string $field
+     * @param string $order
+     * @param string $limit
+     * @return array
+     */
     public function getDataByWhere($table, $where, $field = " * ", $order = 'id DESC', $limit = '')
     {
         $where_sql = $this->where($where);
@@ -98,7 +115,7 @@ class Mysqli extends Database implements IDatabase
      * 获取一个值
      * @param string $query
      * @param mixed  $bind
-     * @return type
+     * @return mixed
      */
     public function getVar($query, $bind = null)
     {
@@ -109,8 +126,8 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 获取数据
-     * @param type $query
-     * @param type $bind
+     * @param string $query
+     * @param array  $bind
      * @return array
      */
     public function getData($query, $bind = null)
@@ -133,9 +150,9 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 插入sql
-     * @param type $table
-     * @param type $data
-     * @return type
+     * @param string $table
+     * @param array  $data
+     * @return mixed
      */
     public function insert($table, $data)
     {
@@ -159,11 +176,11 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 更新或者添加一条数据
-     * @param type $table
-     * @param type $data
-     * @param type $value
-     * @param type $field
-     * @return type
+     * @param string $table
+     * @param array  $data
+     * @param mixed  $value
+     * @param string $field
+     * @return mixed
      */
     public function upsert($table, $data, $value, $field = "id")
     {
@@ -176,8 +193,9 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 批量插入
-     * @param type $table
-     * @param type $data
+     * @param string $table
+     * @param array  $data
+     * @return mixed
      */
     public function insertBatch($table, $data)
     {
@@ -206,8 +224,9 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 批量插入(忽略重复索引)
-     * @param type $table
-     * @param type $data
+     * @param string $table
+     * @param array  $data
+     * @return mixed
      */
     public function insertIgnoreBatch($table, $data)
     {
@@ -236,14 +255,13 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 简单分页数据
-     * @param        $table
+     * @param string $table
      * @param array  $where
      * @param int    $page
      * @param int    $size
      * @param string $order
      * @param string $fields
      * @return array
-     * @author  Dawnc
      */
     public function getPageData($table, $where = [], $page = 1, $size = 10, $order = "id DESC", $fields = '*')
     {
@@ -277,15 +295,14 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 简单分页数据
-     * @param        $table
-     * @param        $join
+     * @param string $table
+     * @param string $join
      * @param array  $where
      * @param int    $page
      * @param int    $size
      * @param string $order
      * @param string $fields
      * @return array
-     * @author  Dawnc
      */
     public function getJoinPageData(
         $table,
@@ -325,11 +342,12 @@ class Mysqli extends Database implements IDatabase
     }
 
     /**
+     * /**
      * 更新sql
-     * @param type $table
-     * @param type $data
-     * @param type $where
-     * @return type
+     * @param string    $table
+     * @param array     $data
+     * @param array|int $where
+     * @return bool
      */
     public function update($table, $data, $where)
     {
@@ -355,6 +373,11 @@ class Mysqli extends Database implements IDatabase
         return $this->exec($query);
     }
 
+    /**
+     * @param string           $table
+     * @param array|int|string $where
+     * @return bool
+     */
     public function delete($table, $where)
     {
 
@@ -376,7 +399,7 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 执行sql
-     * @param type $query
+     * @param string $query
      * @return boolean
      */
     private function exec($query)
@@ -394,9 +417,9 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 执行sql
-     * @param type $query
-     * @param type $bind
-     * @return boolean
+     * @param string     $query
+     * @param array|null $bind
+     * @return bool
      */
     public function query($query, $bind = null)
     {
@@ -407,8 +430,8 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 转义安全字符
-     * @param type $val
-     * @return type
+     * @param string $val
+     * @return string
      */
     public function escape($val)
     {
@@ -417,8 +440,6 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 关闭数据库
-     * @param string $conf
-     * @param string $type
      */
     public function close()
     {
@@ -427,7 +448,7 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 开启事物
-     * @return type
+     * @return bool
      */
     public function begin()
     {
@@ -437,7 +458,7 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 提交事物
-     * @return type
+     * @return bool
      */
     public function commit()
     {
@@ -449,7 +470,7 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 回滚
-     * @return type
+     * @return bool
      */
     public function rollback()
     {
