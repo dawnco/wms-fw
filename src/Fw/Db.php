@@ -7,7 +7,7 @@
 namespace Wms\Fw;
 
 
-use wms\database\Mysqli;
+use Wms\Database\Mysqli;
 
 class Db
 {

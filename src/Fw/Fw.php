@@ -51,7 +51,6 @@ class Fw
         } catch (Exception $e) {
             $response->status(500)->send($e->getMessage());
             Log::info("Exception %s", $e);
-
         }
     }
 

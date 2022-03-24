@@ -69,7 +69,7 @@ interface IDatabase
      * 插入
      * @param string $table
      * @param array  $data
-     * @return type
+     * @return mixed
      */
     public function insert($table, $data);
 
@@ -102,7 +102,7 @@ interface IDatabase
      * @param string $table
      * @param array  $data
      * @param mix    $where 数组 或者 字符串  字符串则表示ID
-     * @return type
+     * @return mixed
      */
     public function update($table, $data, $where);
 
