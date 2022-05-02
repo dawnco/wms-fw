@@ -33,7 +33,6 @@ class Mysqli extends Database implements IDatabase
         $database = $this->conf['database'];
         $charset = $this->conf['charset'];
 
-        $this->link->init();
         // 结果int 不转为 string
         $this->link->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, true);
         $isConnect = $this->link->real_connect($hostname, $username, $password, $database, $port);

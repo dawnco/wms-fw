@@ -14,5 +14,8 @@
     "psr-4": {
       "Wms\\": "src/"
     }
+  },
+  "require": {
+    "ext-mysqli": "*"
   }
 }
