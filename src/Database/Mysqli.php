@@ -183,7 +183,7 @@ class Mysqli extends Database implements IDatabase
      */
     public function upsert($table, $data, $value, $field = "id")
     {
-        if ($value && $this->getVar("SELECT id FROM `$table` WHERE `$field` = ?s", $value)) {
+        if ($value && $this->getVar("SELECT id FROM `$table` WHERE `$field` = ?s", [$value])) {
             return $this->update($table, $data, array($field => $value));
         } else {
             return $this->insert($table, $data);
