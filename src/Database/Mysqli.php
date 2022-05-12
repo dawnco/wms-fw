@@ -48,8 +48,8 @@ class Mysqli extends Database implements IDatabase
 
     /**
      * 获取一行数据
-     * @param string $query
-     * @param array|null  $bind
+     * @param string     $query
+     * @param array|null $bind
      * @return boolean
      */
     public function getLine($query, $bind = null)
@@ -276,8 +276,7 @@ class Mysqli extends Database implements IDatabase
 
         $entries = [];
 
-        $query = "SELECT {
-                $fields} FROM `$table` WHERE $sql_where ORDER BY $order LIMIT $start, $size";
+        $query = "SELECT {$fields} FROM `$table` WHERE $sql_where ORDER BY $order LIMIT $start, $size";
         $result = $this->exec($query, $this->link);
         if ($result) {
             while ($row = $result->fetch_assoc()) {
