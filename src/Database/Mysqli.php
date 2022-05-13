@@ -433,7 +433,7 @@ class Mysqli extends Database implements IDatabase
      */
     public function escape($val)
     {
-        return $this->link->real_escape_string($val);
+        return $this->link->real_escape_string((string)$val);
     }
 
     /**
