@@ -50,7 +50,7 @@ class Mysqli extends Database implements IDatabase
      * 获取一行数据
      * @param string     $query
      * @param array|null $bind
-     * @return boolean
+     * @return array
      */
     public function getLine($query, $bind = null)
     {
