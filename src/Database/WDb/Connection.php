@@ -8,6 +8,7 @@ namespace Wms\Database\WDb;
 
 use PDO;
 use Wms\Database\DatabaseException;
+use Wms\Fw\Conf;
 
 class Connection
 {
@@ -15,6 +16,12 @@ class Connection
     const DB_ERROR_CODE = 50005;
 
     protected PDO $dbh;
+
+    /**
+     * 执行过的sql
+     * @var array
+     */
+    public array $sql = [];
 
     public function __construct(
         string $host,
@@ -201,6 +208,11 @@ class Connection
         try {
             $sth = $this->dbh->prepare($query);
             $result = $sth->execute($params);
+
+            if (Conf::get('app.env') == 'dev') {
+                $this->sql[] = $query . "[" . json_encode($params) . "]";
+            }
+
             if (!$result) {
                 $msg = sprintf("SQL ERROR  %s [ %s : %s ]", $e->getMessage(), $query, json_encode($params));
                 throw new DatabaseException($msg, self::DB_ERROR_CODE);

@@ -6,7 +6,7 @@
 
 namespace Wms\Fw;
 
-use Exception;
+use Throwable;
 use Wms\Database\DatabaseException;
 use Wms\Lib\Log;
 
@@ -49,7 +49,7 @@ class Fw
         } catch (WmsException $e) {
             $response->sendJson($e->getCode(), $e->getMessage(), $e->getData());
             Log::info("%s", $e);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $response->status(500)->send($e->getMessage());
             Log::info("Exception %s", $e);
         }
