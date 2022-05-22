@@ -35,10 +35,14 @@ class WDb
         if (!isset(self::$connections[$confName])) {
             $conf = Conf::get("app.db.$confName");
             self::$connections[$confName] = new Connection(
-                $conf['hostname'],
-                $conf['database'],
-                $conf['username'],
-                $conf['password'],
+                [
+                    'hostname' => $conf['hostname'] ?? '127.0.0.1',
+                    'port' => $conf['port'] ?? 3306,
+                    'database' => $conf['database'],
+                    'username' => $conf['username'] ?? null,
+                    'password' => $conf['password'] ?? null,
+                    'timezone' => $conf['timezone'] ?? null,
+                ]
             );
         }
         return self::$connections[$confName];

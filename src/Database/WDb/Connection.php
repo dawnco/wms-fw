@@ -13,9 +13,16 @@ use Wms\Fw\Conf;
 class Connection
 {
 
-    const DB_ERROR_CODE = 50005;
+    const DB_ERROR_CODE = 0;
 
-    protected PDO $dbh;
+    protected ?PDO $dbh = null;
+
+    protected array $config = [];
+
+    /**
+     * @var int 连接了多少次
+     */
+    protected int $retry = 0;
 
     /**
      * 执行过的sql
@@ -23,20 +30,53 @@ class Connection
      */
     public array $sql = [];
 
-    public function __construct(
-        string $host,
-        string $dbname,
-        ?string $user = null,
-        ?string $password = null,
-        ?string $charset = 'utf8mb4',
-        ?array $options = null
-    ) {
-        $this->dbh = new PDO("mysql:host=$host;dbname=$dbname;charset=$charset", $user, $password, $options);
+    public function __construct(array $config)
+    {
+        $this->config['hostname'] = $config['hostname'] ?? '127.0.0.1';
+        $this->config['database'] = $config['database'] ?? '';
+        $this->config['port'] = $config['port'] ?? 3306;
+        $this->config['username'] = $config['username'] ?? null;
+        $this->config['password'] = $config['password'] ?? null;
+        $this->config['charset'] = $config['charset'] ?? 'utf8mb4';
+        $this->config['options'] = $config['options'] ?? null;
+        $this->config['timezone'] = $config['timezone'] ?? null;
+
+        $this->connect();
+    }
+
+    protected function connect()
+    {
+
+        if ($this->dbh instanceof PDO) {
+            $this->dbh = null;
+        }
+
+        if ($this->retry++ > 3) {
+            throw new DatabaseException(sprintf("SQL ERROR connect %s fail after retry 3 time", $this->config['hostname']),
+                self::DB_ERROR_CODE);
+        }
+
+        $dsn =
+            "mysql:host={$this->config['hostname']};dbname={$this->config['database']};port={$this->config['port']}charset={$this->config['charset']}";
+
+        try {
+            $this->dbh = new PDO($dsn,
+                $this->config['username'],
+                $this->config['password'],
+                $this->config['options']);
+        } catch (\PDOException $e) {
+            $msg = sprintf("SQL ERROR connect %s fail %s", $this->config['hostname'], $e->getMessage());
+            throw new DatabaseException($msg, self::DB_ERROR_CODE, $e);
+        }
 
         $this->dbh->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->dbh->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_NATURAL);
         $this->dbh->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
+
+        if ($this->config['timezone']) {
+            $this->execute('SET time_zone = ?', [$this->config['timezone']]);
+        }
 
     }
 
@@ -219,6 +259,12 @@ class Connection
             }
             return $sth;
         } catch (\PDOException $e) {
+            if (strpos($e->getMessage(), 'MySQL server has gone away')) {
+                // 重试机制
+                $this->connect();
+                return $this->statement($query, $params);
+            }
+
             $msg = sprintf("SQL ERROR  %s [ %s : %s ]", $e->getMessage(), $query, json_encode($params));
             throw new DatabaseException($msg, self::DB_ERROR_CODE, $e);
         }
