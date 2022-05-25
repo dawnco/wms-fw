@@ -52,7 +52,8 @@ class Connection
         }
 
         if ($this->retry++ > 3) {
-            throw new DatabaseException(sprintf("SQL ERROR connect %s fail after retry 3 time", $this->config['hostname']),
+            throw new DatabaseException(sprintf("SQL ERROR connect %s fail after retry 3 time",
+                $this->config['hostname']),
                 self::DB_ERROR_CODE);
         }
 
@@ -207,7 +208,7 @@ class Connection
     {
         $sth = $this->statement($query, $params);
         $sth->setFetchMode(PDO::FETCH_CLASS, $className);
-        return $sth->fetch(PDO::FETCH_CLASS);
+        return $sth->fetch(PDO::FETCH_CLASS) ?: null;
     }
 
     /**
@@ -221,7 +222,7 @@ class Connection
     public function getData(string $query, array $params = [], string $className = 'stdClass')
     {
         $sth = $this->statement($query, $params);
-        return $sth->fetchAll(PDO::FETCH_CLASS, $className);
+        return $sth->fetchAll(PDO::FETCH_CLASS, $className) ?: [];
     }
 
     /**
