@@ -88,7 +88,14 @@ class Fw
     public function shell($argv)
     {
         $name = $argv[1];
-        $clsName = "\\App\\Shell\\" . $name;
+
+        if (class_exists($name)) {
+            $clsName = $name;
+        } else {
+            $clsName = "\\App\\Shell\\" . $name;
+        }
+
+
         if (!class_exists($clsName)) {
             throw new WmsException("$clsName SHELL 不存在");
         }
