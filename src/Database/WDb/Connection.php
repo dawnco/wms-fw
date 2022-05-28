@@ -82,16 +82,16 @@ class Connection
     }
 
     /**
-     * 执行一条非select查询,返回影响的行数
+     * 执行一条sql
      * @param string $query
      * @param array  $params
      * @return int
      * @throws DatabaseException
      */
-    public function execute(string $query, array $params = []): int
+    public function execute(string $query, array $params = [])
     {
         $stm = $this->statement($query, $params);
-        return $stm->rowCount();
+        return $stm;
     }
 
     /**
@@ -101,7 +101,7 @@ class Connection
      * @return int 上次插入的ID
      * @throws DatabaseException
      */
-    public function insert(string $table, array $data): int
+    public function insert(string $table, array $data)
     {
         $fields = array_keys($data);
         $values = array_values($data);
@@ -110,6 +110,12 @@ class Connection
         $query = "INSERT INTO `{$table}` (`{$fieldsStr}`) VALUE ({$holders})";
 
         $this->statement($query, $values);
+
+    }
+
+    public function insertGetId(string $table, array $data): int
+    {
+        $this->insert($table, $data);
         return (int)$this->dbh->lastInsertId();
     }
 
@@ -148,7 +154,7 @@ class Connection
      * @return int 上次插入的ID
      * @throws DatabaseException
      */
-    public function delete(string $table, array $where): int
+    public function delete(string $table, array $where)
     {
         $values = [];
         $s = [];
@@ -158,8 +164,7 @@ class Connection
         }
         $values = array_values($where);
         $query = "DELETE FROM `{$table}` WHERE " . implode("AND", $s);
-        $sth = $this->statement($query, $values);
-        return $sth->rowCount();
+        $this->statement($query, $values);
     }
 
 
@@ -171,7 +176,7 @@ class Connection
      * @return int 影响的行数
      * @throws DatabaseException
      */
-    public function update(string $table, array $data, array $where): int
+    public function update(string $table, array $data, array $where)
     {
 
         $params = [];
@@ -192,8 +197,8 @@ class Connection
 
         $query = "UPDATE `{$table}` SET $updateSetsStr WHERE 1 AND $whereSetsStr";
 
-        $sth = $this->statement($query, $params);
-        return $sth->rowCount();
+        $this->statement($query, $params);
+
     }
 
     /**
@@ -201,7 +206,7 @@ class Connection
      * @param string $query     sql语句
      * @param array  $params    绑定值
      * @param string $className 结果对象
-     * @return \stdClass
+     * @return \stdClass|null
      * @throws DatabaseException
      */
     public function getLine(string $query, array $params = [], string $className = 'stdClass')
@@ -219,7 +224,7 @@ class Connection
      * @return array
      * @throws DatabaseException
      */
-    public function getData(string $query, array $params = [], string $className = 'stdClass')
+    public function getData(string $query, array $params = [], string $className = 'stdClass'): array
     {
         $sth = $this->statement($query, $params);
         return $sth->fetchAll(PDO::FETCH_CLASS, $className) ?: [];
@@ -235,7 +240,7 @@ class Connection
     public function getVar(string $query, array $params = [])
     {
         $sth = $this->statement($query, $params);
-        return $sth->fetchColumn();
+        return $sth->fetchColumn() ?: null;
     }
 
     /**
@@ -271,19 +276,28 @@ class Connection
         }
     }
 
-    public function begin(): bool
+    public function begin()
     {
-        return $this->dbh->beginTransaction();
+        $ret = $this->dbh->beginTransaction();
+        if (!$ret) {
+            throw new DatabaseException("transaction begin error ", self::DB_ERROR_CODE, $e);
+        }
     }
 
-    public function commit(): bool
+    public function commit()
     {
-        return $this->dbh->commit();
+        $ret = $this->dbh->commit();
+        if (!$ret) {
+            throw new DatabaseException("transaction commit error ", self::DB_ERROR_CODE, $e);
+        }
     }
 
-    public function rollback(): bool
+    public function rollback()
     {
-        return $this->dbh->rollBack();
+        $ret = $this->dbh->rollBack();
+        if (!$ret) {
+            throw new DatabaseException("transaction rollback error ", self::DB_ERROR_CODE, $e);
+        }
     }
 
 }

@@ -12,14 +12,15 @@ namespace Wms\Database\WDb;
 use Wms\Fw\Conf;
 
 /**
- * @method static insert(string $table, array $data = []): int
- * @method static insertBatch(string $table, array $data = []): int
- * @method static delete(string $table, array $where = []): int
- * @method static update(string $table, array $data, array $where): int
+ * @method static insert(string $table, array $data = [])
+ * @method static insertGetId(string $table, array $data = [])
+ * @method static insertBatch(string $table, array $data = [])
+ * @method static delete(string $table, array $where = [])
+ * @method static update(string $table, array $data, array $where)
  * @method static getLine(string $query, array $params = [], string $className = 'stdClass')
  * @method static getData(string $query, array $params = [], string $className = 'stdClass')
  * @method static getVar(string $query, array $params = [])
- * @method static execute(string $query, array $params = []): int
+ * @method static execute(string $query, array $params = [])
  */
 class WDb
 {
