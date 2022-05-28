@@ -85,23 +85,22 @@ class Connection
      * 执行一条sql
      * @param string $query
      * @param array  $params
-     * @return int
+     * @return void
      * @throws DatabaseException
      */
-    public function execute(string $query, array $params = [])
+    public function execute(string $query, array $params = []): void
     {
-        $stm = $this->statement($query, $params);
-        return $stm;
+        $this->statement($query, $params);
     }
 
     /**
      *  插入一条记录
      * @param string $table 表
      * @param array  $data  数据
-     * @return int 上次插入的ID
+     * @return void
      * @throws DatabaseException
      */
-    public function insert(string $table, array $data)
+    public function insert(string $table, array $data): void
     {
         $fields = array_keys($data);
         $values = array_values($data);
@@ -113,6 +112,13 @@ class Connection
 
     }
 
+    /**
+     * 插入一条记录
+     * @param string $table
+     * @param array  $data
+     * @return int 插入的自增ID
+     * @throws DatabaseException
+     */
     public function insertGetId(string $table, array $data): int
     {
         $this->insert($table, $data);
@@ -126,7 +132,7 @@ class Connection
      * @return void
      * @throws DatabaseException
      */
-    public function insertBatch(string $table, array $data = [])
+    public function insertBatch(string $table, array $data = []): void
     {
         $fields = array_keys($data[0]);
         $fieldsStr = implode("`,`", $fields);
@@ -151,10 +157,10 @@ class Connection
      * 删除一条记录
      * @param string $table 表
      * @param array  $data  数据 ['id'=>1, 'pid'=>1]
-     * @return int 上次插入的ID
+     * @return void
      * @throws DatabaseException
      */
-    public function delete(string $table, array $where)
+    public function delete(string $table, array $where): void
     {
         $values = [];
         $s = [];
@@ -173,10 +179,10 @@ class Connection
      * @param string $table 表
      * @param array  $data  数据
      * @param array  $where 条件 例如 ['id'=>1]
-     * @return int 影响的行数
+     * @return void
      * @throws DatabaseException
      */
-    public function update(string $table, array $data, array $where)
+    public function update(string $table, array $data, array $where): void
     {
 
         $params = [];
@@ -206,7 +212,7 @@ class Connection
      * @param string $query     sql语句
      * @param array  $params    绑定值
      * @param string $className 结果对象
-     * @return \stdClass|null
+     * @return mixed
      * @throws DatabaseException
      */
     public function getLine(string $query, array $params = [], string $className = 'stdClass')
