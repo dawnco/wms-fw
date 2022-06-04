@@ -13,7 +13,7 @@ use Wms\Fw\Conf;
 class Connection
 {
 
-    const DB_ERROR_CODE = 0;
+    const DB_ERROR_CODE = 10001;
 
     protected ?PDO $dbh = null;
 
