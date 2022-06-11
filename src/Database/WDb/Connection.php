@@ -113,6 +113,23 @@ class Connection
     }
 
     /**
+     * Replace 一条记录 如果存在PRIMARY或UNIQUE相同的记录，则先删除掉。再插入新记录。
+     * @param string $table 表
+     * @param array  $data  数据
+     * @return void
+     * @throws DatabaseException
+     */
+    public function replace(string $table, array $data): void
+    {
+        $fields = array_keys($data);
+        $values = array_values($data);
+        $fieldsStr = implode("`,`", $fields);
+        $holders = implode(',', array_fill(0, count($fields), '?'));
+        $query = "REPLACE INTO `{$table}` (`{$fieldsStr}`) VALUE ({$holders})";
+        $this->statement($query, $values);
+    }
+
+    /**
      * 插入一条记录
      * @param string $table
      * @param array  $data

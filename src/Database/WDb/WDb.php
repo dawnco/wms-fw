@@ -13,6 +13,7 @@ use Wms\Fw\Conf;
 
 /**
  * @method static insert(string $table, array $data = [])
+ * @method static replace(string $table, array $data = [])
  * @method static insertGetId(string $table, array $data = [])
  * @method static insertBatch(string $table, array $data = [])
  * @method static delete(string $table, array $where = [])
