@@ -19,6 +19,11 @@ class Query
 
     public function __construct(string $sql)
     {
+        $this->setSql($sql);
+    }
+
+    public function setSql(string $sql)
+    {
         $this->sql = $sql;
     }
 
