@@ -9,10 +9,23 @@ namespace Wms\Database\WDb;
 
 class QueryBuilder
 {
+
+    /**
+     * 生成查询类
+     * @param string $query
+     * @return Query
+     */
+    public static function query(string $query)
+    {
+        $instance = new Query($query);
+        return $instance;
+    }
+
     /**
      * 生成占位符 sql 和 绑定参数
      * @param array $where [['sql like AND a = ?', 'val or condition', 'condition']]
-     * @return array
+     *                     [['sql like AND a = ?', ['val or condition'], 'condition']]
+     * @return array ['sql'=>'', 'params'=>[]]
      */
     public static function where(array $where)
     {
@@ -30,10 +43,7 @@ class QueryBuilder
             }
         }
 
-        return [
-            "query" => implode(" ", $sql),
-            "params" => $params,
-        ];
+        return [implode(" ", $sql), $params];
     }
 
     /**

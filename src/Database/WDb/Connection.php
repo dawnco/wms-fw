@@ -283,7 +283,7 @@ class Connection
             }
 
             if (!$result) {
-                $msg = sprintf("SQL ERROR  %s [ %s : %s ]", $e->getMessage(), $query, json_encode($params));
+                $msg = sprintf("SQL ERROR  { %s : %s }", $query, json_encode($params));
                 throw new DatabaseException($msg, self::DB_ERROR_CODE);
             }
             return $sth;
@@ -294,7 +294,7 @@ class Connection
                 return $this->statement($query, $params);
             }
 
-            $msg = sprintf("SQL ERROR  %s [ %s : %s ]", $e->getMessage(), $query, json_encode($params));
+            $msg = sprintf("SQL ERROR  %s { %s : %s }", $e->getMessage(), $query, json_encode($params));
             throw new DatabaseException($msg, self::DB_ERROR_CODE, $e);
         }
     }
@@ -303,7 +303,7 @@ class Connection
     {
         $ret = $this->dbh->beginTransaction();
         if (!$ret) {
-            throw new DatabaseException("transaction begin error ", self::DB_ERROR_CODE, $e);
+            throw new DatabaseException("transaction begin error ", self::DB_ERROR_CODE);
         }
     }
 
@@ -311,7 +311,7 @@ class Connection
     {
         $ret = $this->dbh->commit();
         if (!$ret) {
-            throw new DatabaseException("transaction commit error ", self::DB_ERROR_CODE, $e);
+            throw new DatabaseException("transaction commit error ", self::DB_ERROR_CODE);
         }
     }
 
@@ -319,7 +319,7 @@ class Connection
     {
         $ret = $this->dbh->rollBack();
         if (!$ret) {
-            throw new DatabaseException("transaction rollback error ", self::DB_ERROR_CODE, $e);
+            throw new DatabaseException("transaction rollback error ", self::DB_ERROR_CODE);
         }
     }
 
