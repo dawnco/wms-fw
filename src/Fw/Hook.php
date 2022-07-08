@@ -10,15 +10,15 @@ namespace Wms\Fw;
 class Hook
 {
 
-    private $callbacks = [];
+    private array $callbacks = [];
 
     /**
-     * @param type $name 名称
-     * @param type $callback
-     * @param type $seq  按升序
-     * @param type $parameter
+     * @param string   $name 名称
+     * @param callable $callback
+     * @param int      $seq  按升序
+     * @param array    $parameter
      */
-    public function add($name, $callback, $seq = 10, $parameter = [])
+    public function add(string $name, callable $callback, int $seq = 10, array $parameter = []): void
     {
 
         if (!isset($this->callbacks[$name])) {
@@ -31,17 +31,20 @@ class Hook
             "parameter" => $parameter,
         ];
 
-        usort($this->callbacks[$name], [$this, "sort"]);
+        usort($this->callbacks[$name], function ($a, $b) {
+            return $a['seq'] <=> $b['seq'];
+        });
 
 
     }
 
+
     /**
-     * 执行action
-     * @param type $name
-     * @param type $parameter
+     * @param string $name
+     * @param array  $parameter
+     * @return void
      */
-    public function handle($name, $parameter = [])
+    public function handle(string $name, array $parameter = []): void
     {
         $callbacks = $this->callbacks[$name] ?? [];
 
@@ -49,19 +52,5 @@ class Hook
             //执行
             call_user_func_array($c['callback'], array_merge($c['parameter'], $parameter));
         }
-    }
-
-    /**
-     * 按升序排列
-     * @param type $a
-     * @param type $b
-     * @return int
-     */
-    public function sort($a, $b)
-    {
-        if ($a['seq'] == $b['seq']) {
-            return 0;
-        }
-        return $a['seq'] > $b['seq'] ? 1 : -1; // 按升序排列
     }
 }

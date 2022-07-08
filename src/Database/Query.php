@@ -4,7 +4,7 @@
  * @date   2022-05-21
  */
 
-namespace Wms\Database\WDb;
+namespace Wms\Database;
 
 class Query
 {

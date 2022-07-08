@@ -7,9 +7,9 @@ declare(strict_types=1);
  * @date   2022-05-21
  */
 
-namespace Wms\Database\WDb;
+namespace Wms\Fw;
 
-use Wms\Fw\Conf;
+use Wms\Database\Connection;
 
 /**
  * @method static insert(string $table, array $data = [])
@@ -54,7 +54,7 @@ class WDb
      * @param string $confName
      * @return void
      */
-    public static function release(string $confName = 'default')
+    public static function release(string $confName = 'default'): void
     {
         unset(self::$connections[$confName]);
     }

@@ -1,8 +1,6 @@
 <?php
 
-namespace Wumashi\Lib;
-
-use wumashi\core\Registry;
+namespace Wms\Lib;
 
 /**
  * 分页类
@@ -29,9 +27,9 @@ class Pagination
     private $__endNum;
 
     /**
-     * @param type $option array("total" => 总记录数, "size"=>每页数目)
+     * @param array $option array("total" => 总记录数, "size"=>每页数目)
      */
-    public function __construct($option)
+    public function __construct(array $option)
     {
 
         foreach ($option as $key => $value) {

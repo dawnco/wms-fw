@@ -7,17 +7,19 @@
 namespace Wms\Fw;
 
 
+use Wms\Constant\ErrorCode;
+
 class Route
 {
-    private $uri;
-    private $control;
-    private $method;
-    private $param;
+    private string $uri;
+    private string $control;
+    private string $method;
+    private array $param;
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getParam()
+    public function getParam(): array
     {
         return $this->param;
     }
@@ -29,20 +31,21 @@ class Route
     }
 
 
-    public function parse($uri)
+    /**
+     * @throws WmsException
+     */
+    public function parse($uri): void
     {
         $rules = Conf::get("route") ?? [];
         //是否配置过路由
         foreach ($rules as $u => $r) {
             $matches = array();
             if (preg_match("#^$u$#", $uri, $matches)) {
-                $params = $this->param($r, $matches);
-                $this->control = $r['c'];
-                $this->param = $params;
-                return null;
+                $this->param($r, $matches);
+                return;
             }
         }
-        throw new WmsException("no route match : $uri", 404);
+        throw new WmsException("no route match : $uri", ErrorCode::PAGE_NOT_FOUND);
     }
 
     private function parseUri()
@@ -78,41 +81,40 @@ class Route
         return $uri;
     }
 
-    private function param($rule, $matches = [])
+    private function param($rule, $matches = []): void
     {
 
-        $this->control = $rule['c'];
-        $this->method = isset($rule['m']) ? $rule['m'] : 'index';
+        $this->control = $rule[0] ?? '';
+        $this->method = $rule[1] ?? 'index';
 
         $url_param = array_slice($matches, 1);
         //合并参数
         $param = [];
-        if (isset($rule['p'])) {
-            $param = array_merge((array)$rule['p'], $url_param);
+        if (isset($rule[2])) {
+            $param = array_merge((array)$rule[2], $url_param);
         } else {
             $param = $url_param;
         }
         $this->param = $param;
-        return $param;
     }
 
-    public function getUri()
+    public function getUri(): string
     {
         return $this->uri;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getControl()
+    public function getControl(): string
     {
         return $this->control;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->method;
     }

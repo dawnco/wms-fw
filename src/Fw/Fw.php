@@ -8,20 +8,15 @@ namespace Wms\Fw;
 
 use Throwable;
 use Wms\Database\DatabaseException;
+use Wms\Exception\PageNotFoundException;
+use Wms\Exception\WmsException;
 use Wms\Lib\Log;
 
 class Fw
 {
-    public static $application = null;
 
-    public $hook = null;
-    public $route = null;
-
-    public static function instance()
-    {
-        return self::$application = new self();
-    }
-
+    public Hook|null $hook = null;
+    public Route|null $route = null;
 
     public function __construct()
     {
@@ -68,13 +63,13 @@ class Fw
         $method = $this->route->getMethod();
         $param = $this->route->getParam();
         if (!class_exists($control)) {
-            throw new WmsException($control . " File Not Found");
+            throw new PageNotFoundException($control . " File Not Found");
         }
 
         $classInstance = new $control($request);
 
         if (!method_exists($classInstance, $method)) {
-            throw new WmsException($control . "->" . $method . "() Method Not Found");
+            throw new PageNotFoundException($control . "->" . $method . "() Method Not Found");
         }
 
         $body = call_user_func_array(array($classInstance, $method), $param);

@@ -9,12 +9,12 @@ namespace Wms\Fw;
 
 class Conf
 {
-    private static $data = [];
+    private static array $data = [];
 
     public static function get($key, $default = null)
     {
 
-        if (strpos($key, '.') === false) {
+        if (!str_contains($key, '.')) {
             return self::$data[$key] ?? $default;
         }
 
