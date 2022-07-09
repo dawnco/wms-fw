@@ -7,16 +7,14 @@
 namespace Wms\Fw;
 
 use Throwable;
-use Wms\Database\DatabaseException;
+use Wms\Exception\ExceptionHandler;
 use Wms\Exception\PageNotFoundException;
 use Wms\Exception\WmsException;
-use Wms\Lib\Log;
 
 class Fw
 {
 
-    public Hook|null $hook = null;
-    public Route|null $route = null;
+    public Route $route;
 
     public function __construct()
     {
@@ -24,41 +22,42 @@ class Fw
     }
 
 
-    public function run()
+    public function run(): void
     {
-
-        set_error_handler([$this, 'errorHandler']);
-
-        $request = new Request();
-
-        $responseCls = Conf::get('app.response.handler', Response::class);
-        $response = new $responseCls();
-
+        $response = new  Response();
         try {
-            $body = $this->exec($request);
-            $response->sendJson(0, null, $body);
-        } catch (DatabaseException $e) {
-            $response->sendJson($e->getCode(),
-                Conf::get('app.env') == 'dev' ? $e->getMessage() : "DATABASE OPERATE ERROR", $e->getData());
-            Log::error("%s %s", "DATABASE OPERATE ERROR", $e);
-        } catch (WmsException $e) {
-            $response->sendJson($e->getCode(), $e->getMessage(), $e->getData());
-            Log::info("%s", $e);
+            $request = new Request();
+            $this->route = new Route($request);
+            $response = $this->exec($request);
+            $this->response($response);
         } catch (Throwable $e) {
-            $response->status(500)->send($e->getMessage());
-            Log::info("Exception %s", $e);
+            $handlerCls = Conf::get('app.exception.handler', ExceptionHandler::class);
+            /**
+             * @var  ExceptionHandler $handler
+             */
+            $handler = new $handlerCls();
+            $this->response($handler->handle($e, $response));
         }
     }
 
+
+    private function response(Response $response): void
+    {
+        foreach ($response->getHeaders() as $k => $v) {
+            header("$k:$v");
+        }
+        header("Status:" . $response->getStatusCode());
+        echo $response->getBody();
+    }
+
+    /**
+     * @throws PageNotFoundException
+     * @throws WmsException
+     */
     private function exec($request)
     {
 
-        $this->route = new Route();
-        $this->hook = new Hook();
-        $this->hook();
-
-        $this->hook->handle('pre_control');
-
+        $this->route = new Route($request);
         $control = $this->route->getControl();
         $method = $this->route->getMethod();
         $param = $this->route->getParam();
@@ -72,16 +71,16 @@ class Fw
             throw new PageNotFoundException($control . "->" . $method . "() Method Not Found");
         }
 
-        $body = call_user_func_array(array($classInstance, $method), $param);
-
-        $this->hook->handle('after_control');
-
-        return $body;
+        return call_user_func_array(array($classInstance, $method), $param);
 
     }
 
+    /**
+     * @throws WmsException
+     */
     public function shell($argv)
     {
+
         $name = $argv[1];
 
         if (class_exists($name)) {
@@ -90,31 +89,10 @@ class Fw
             $clsName = "\\App\\Shell\\" . $name;
         }
 
-
         if (!class_exists($clsName)) {
             throw new WmsException("$clsName SHELL 不存在");
         }
         $cls = new $clsName();
         return $cls->start(array_slice($argv, 2));
     }
-
-    public function hook()
-    {
-        $hooks = Conf::get("hook");
-        foreach ((array)$hooks as $preg => $hook) {
-            if (preg_match("#^$preg$#i", $this->route->getUri())) {
-                $this->hook->add($hook['weld'], [
-                    new $hook['h'](),
-                    isset($hook['m']) ? $hook['m'] : "hook"
-                ], $hook['seq'], isset($hook['p']) ? $hook['p'] : []);
-            }
-        }
-    }
-
-    public function errorHandler($errno, $errstr, $errfile, $errline)
-    {
-        Log::error("PHP ERROR: %s in %s:%s",
-            $errstr, $errfile, $errline);
-    }
-
 }

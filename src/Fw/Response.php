@@ -6,47 +6,103 @@
 
 namespace Wms\Fw;
 
-
 class Response
 {
 
-    protected $status = 200;
+    protected array $headers = [];
+    protected string $body = '';
+    protected int $status = 200;
 
-    protected $headerMap = [
-        200 => "HTTP/1.1 200 OK",
-        404 => "HTTP/1.1 404 Not Found",
-        301 => "HTTP/1.1 301 Moved Permanently",
-        500 => "HTTP/1.1 500 Internal Server Error",
-    ];
-
-
-    public function status($status)
+    public function getHeaders(): array
     {
-        $this->status = $status;
-        return $this;
+        return $this->headers;
     }
 
-    public function sendJson($code = 0, $msg = null, $data = null)
+    public function getHeader($name): array
     {
-        $out['code'] = $code;
-        if ($msg !== null) {
-            $out['msg'] = $msg;
-        }
-        if ($data !== null) {
-            $out['data'] = $data;
-        }
-
-        $this->send(json_encode($out));
+        return $this->headers[strtolower($name)] ?? [];
     }
 
-    public function send($str)
+    public function getHeaderLine($name): string
     {
-        if ($this->status == 200) {
-            header('content-type:application/json;charset=utf-8');
-        } else {
-            $header = $this->headerMap[$this->status] ?? $this->headerMap[500];
-            header($header);
-        }
-        echo $str;
+        return implode(', ', $this->getHeader($name));
     }
+
+    /**
+     * @param $code
+     * @param $reasonPhrase
+     * @return Response
+     */
+    public function withStatus($code, $reasonPhrase = '')
+    {
+        $new = clone $this;
+        $new->status = $code;
+        return $new;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     * @return Response
+     */
+    public function withHeader($name, $value)
+    {
+        if (!is_array($value)) {
+            $value = [$value];
+        }
+        $normalized = strtolower($name);
+        $new = clone $this;
+        $new->headers[$normalized] = $value;
+        return $new;
+
+    }
+
+    /**
+     * @param                  $name
+     * @param array|string|int $value
+     * @return Response
+     */
+    public function withAddedHeader($name, $value): Response
+    {
+        if (!is_array($value)) {
+            $value = [$value];
+        }
+        $new = clone $this;
+        $normalized = strtolower($name);
+        $new->headers[$normalized] = array_merge($new->headers[$normalized], $value);
+        return $new;
+    }
+
+    public function withoutHeader($name): Response
+    {
+        $normalized = strtolower($name);
+        $new = clone $this;
+        unset($new->headers[$normalized]);
+        return $new;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBody(): string
+    {
+        return $this->body;
+    }
+
+    /**
+     * @param string $body
+     * @return Response
+     */
+    public function withBody(string $body): Response
+    {
+        $new = clone $this;
+        $new->body = $body;
+        return $new;
+    }
+
+    public function getStatusCode(): int
+    {
+        return $this->status;
+    }
+
 }

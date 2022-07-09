@@ -10,22 +10,22 @@ namespace Wms\Fw;
 class Request
 {
 
-    private $rawJson;
-    private $post;
-    private $get;
+    private array $rawJson;
+    private array $post;
+    private array $get;
 
     public function __construct()
     {
-        $this->rawJson = json_decode(file_get_contents("php://input"), true);
+        $this->rawJson = json_decode(file_get_contents("php://input"), true) ?: [];
         $this->rawJson = $this->trim($this->rawJson);
         $this->post = $this->trim($_POST);
         $this->get = $this->trim($_GET);
     }
 
-    public function header($name, $default = null)
+    public function getHeaderLine($name): string
     {
         $key = "HTTP_" . str_replace("-", "_", strtoupper($name));
-        return $_SERVER[$key] ?? $default;
+        return $_SERVER[$key] ?? '';
     }
 
     public function input($key = null, $default = null)
@@ -119,5 +119,19 @@ class Request
             $val = trim($val);
         }
         return $val;
+    }
+
+
+    public function getPath(): string
+    {
+        if (isset($_GET['route'])) {
+            $path = $_GET['route'];
+        } elseif (isset($_SERVER['REQUEST_URI'])) {
+            $pos = strpos($_SERVER['REQUEST_URI'], "?");
+            $path = $pos > 0 ? substr($_SERVER['REQUEST_URI'], 0, $pos) : $_SERVER['REQUEST_URI'];
+        } else {
+            $path = "/";
+        }
+        return $path;
     }
 }

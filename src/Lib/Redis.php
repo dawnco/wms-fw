@@ -7,34 +7,40 @@
 namespace Wms\Lib;
 
 
+use Wms\Exception\WmsException;
 use Wms\Fw\Conf;
 
 class Redis
 {
 
-    private static $__instance = [];
+    private static array $instance = [];
 
     /**
-     * @param null $conf
+     * @param string $name
      * @return \Redis
+     * @throws WmsException
      */
-    public static function getInstance($conf = null)
+    public static function getInstance(string $name = 'default'): \Redis
     {
-        $key = md5(serialize($conf));
-        if (!isset(self::$__instance[$key])) {
-            if ($conf == null) {
-                $conf = Conf::get("app.redis.default");
+        if (!isset(self::$instance[$name])) {
+            $conf = Conf::get("app.redis.$name");
+            self::$instance[$name] = new \Redis();
+            $ok = self::$instance[$name]->connect(
+                $conf['hostname'] ?? '127.0.0.1',
+                $conf['port'] ?? 6379,
+                $conf['timeout'] ?? 0.0);
+
+            if (!$ok) {
+                throw new WmsException("Redis connect error");
             }
-            self::$__instance[$key] = new \Redis();
-            self::$__instance[$key]->connect($conf['hostname'], $conf['port']);
 
             $conf['password'] = $conf['password'] ?? null;
             if ($conf['password']) {
-                self::$__instance[$key]->auth($conf['password']);
+                self::$instance[$name]->auth($conf['password']);
             }
-            self::$__instance[$key]->select($conf['db'] ?? 0);
+            self::$instance[$name]->select($conf['db'] ?? 0);
         }
-        return self::$__instance[$key];
+        return self::$instance[$name];
     }
 
 }

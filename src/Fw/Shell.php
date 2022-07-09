@@ -11,7 +11,8 @@ namespace Wms\Fw;
 
 abstract class Shell
 {
-    abstract protected function handle($param = null);
+
+    abstract protected function handle(array|null $param = null): void;
 
     protected function line(string $msg): void
     {

@@ -15,10 +15,9 @@ class QueryBuilder
      * @param string $query
      * @return Query
      */
-    public static function query(string $query)
+    public static function query(string $query): Query
     {
-        $instance = new Query($query);
-        return $instance;
+        return new Query($query);
     }
 
     /**
@@ -27,7 +26,7 @@ class QueryBuilder
      *                     [['sql like AND a = ?', ['val or condition'], 'condition']]
      * @return array ['sql'=>'', 'params'=>[]]
      */
-    public static function where(array $where)
+    public static function where(array $where): array
     {
         $sql = [
             " WHERE 1=1 ",
@@ -51,7 +50,7 @@ class QueryBuilder
      * @param array $arr
      * @return string
      */
-    public static function fillHolder(array $arr)
+    public static function fillHolder(array $arr): string
     {
         return implode(",", array_fill(0, count($arr), "?"));
     }

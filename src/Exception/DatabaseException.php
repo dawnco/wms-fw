@@ -14,7 +14,7 @@ use Wms\Constant\ErrorCode;
 
 class DatabaseException extends WmsException
 {
-    public function __construct(string $message, int $code = ErrorCode::DATABASE_ERROR, Throwable|null $previous = null)
+    public function __construct(string $message, int $code = ErrorCode::DATABASE_ERROR, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

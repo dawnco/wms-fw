@@ -260,7 +260,7 @@ class Connection
      * @return mixed
      * @throws PageNotFoundException
      */
-    public function getVar(string $query, array $params = []): mixed
+    public function getVar(string $query, array $params = [])
     {
         $sth = $this->statement($query, $params);
         return $sth->fetchColumn() ?: null;

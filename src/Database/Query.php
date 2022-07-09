@@ -52,7 +52,7 @@ class Query
      * @param mixed  $condition 是否使用条件 为 null是 使用 $val 做条件
      * @return Query
      */
-    public function where(string $sql, $val, $condition = null)
+    public function where(string $sql, $val, $condition = null): Query
     {
         $this->where[] = [$sql, $val, $condition === null ? (bool)$val : (bool)$condition];
         return $this;

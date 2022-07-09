@@ -17,7 +17,7 @@ class WmsException extends \Exception
 
     protected array $errorData = [];
 
-    public function __construct(string $message, int $code = ErrorCode::SYSTEM_ERROR, Throwable|null $previous = null)
+    public function __construct(string $message, int $code = ErrorCode::SYSTEM_ERROR, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
