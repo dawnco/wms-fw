@@ -7,7 +7,7 @@
 namespace Wms\Fw;
 
 use Throwable;
-use Wms\Exception\ExceptionHandler;
+use Wms\Exception\Handler\ExceptionHandler;
 use Wms\Exception\PageNotFoundException;
 use Wms\Exception\WmsException;
 
@@ -92,6 +92,12 @@ class Fw
 
         $name = $argv[1];
 
+
+        if (!$name) {
+            throw new WmsException("argument is empty");
+        }
+
+
         if (class_exists($name)) {
             $clsName = $name;
         } else {
@@ -99,9 +105,9 @@ class Fw
         }
 
         if (!class_exists($clsName)) {
-            throw new WmsException("$clsName SHELL 不存在");
+            throw new WmsException("$clsName SHELL不存在");
         }
         $cls = new $clsName();
-        return $cls->start(array_slice($argv, 2));
+        return $cls->run(array_slice($argv, 2));
     }
 }

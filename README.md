@@ -2,7 +2,7 @@
 
 ## 安装
 ```
-composer require dawnco/wms-fw
+composer require dawnco/wms-fw 2.0
 ```
 
 ## 参考

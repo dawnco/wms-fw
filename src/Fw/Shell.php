@@ -12,7 +12,12 @@ namespace Wms\Fw;
 abstract class Shell
 {
 
-    abstract protected function handle(array|null $param = null): void;
+    abstract protected function handle(?array $param = null): void;
+
+    public function run(?array $param = null)
+    {
+        $this->handle($param);
+    }
 
     protected function line(string $msg): void
     {

@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @date   2022-07-09
  */
 
-namespace Wms\Exception;
+namespace Wms\Exception\Handler;
 
 use Throwable;
 use Wms\Fw\Response;
