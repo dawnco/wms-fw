@@ -9,15 +9,12 @@ declare(strict_types=1);
 
 namespace Wms\Test\App\Control;
 
-use Wms\Exception\WmsException;
-use Wms\Fw\Conf;
 use Wms\Fw\WDb;
 
 class PortalControl
 {
     public function index($p1 = '', $p2 = '', $p3 = '')
     {
-
         $r = WDb::getData("show tables");
         //return (new Response())->withContent("xxxx");
         return $r;

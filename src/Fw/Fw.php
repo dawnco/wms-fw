@@ -32,7 +32,8 @@ class Fw
             if ($response instanceof Response) {
                 $this->response($response);
             } else {
-                $this->response((new Response())->withContent(json_encode([
+                $this->response((new Response())->withHeader('Content-type',
+                    'application/json; charset=UTF-8')->withContent(json_encode([
                     'code' => 0,
                     "message" => "",
                     "data" => $response
@@ -51,11 +52,13 @@ class Fw
 
     private function response(Response $response): void
     {
-        foreach ($response->getHeaders() as $k => $v) {
-            header("$k:$v");
-        }
         header(sprintf('HTTP/1.1 %s %s', $response->getStatusCode(),
             Response::getReasonPhraseByCode($response->getStatusCode())));
+
+        foreach ($response->getHeaders() as $k => $v) {
+            header("$k:" . implode(", ", $v));
+        }
+
         echo $response->getBody();
     }
 
