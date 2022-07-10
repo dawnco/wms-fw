@@ -28,7 +28,7 @@ class Conf
             return self::$data[$key] ?? $default;
         }
 
-        if (strpos($key, '.')) {
+        if (strpos($key, '.') === false) {
             return self::$data[$key] ?? $default;
         }
 
@@ -58,10 +58,11 @@ class Conf
             return;
         }
 
-        if (strpos($key, ".")) {
-            $keys = explode(".", $key);
+        if (strpos($key, ".") === false) {
+            self::$data[$key] = $value;
+            return;
         } else {
-            $keys = [$key];
+            $keys = explode(".", $key);
         }
 
         $array = &self::$data;

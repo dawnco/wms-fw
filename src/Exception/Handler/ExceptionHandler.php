@@ -25,6 +25,7 @@ class ExceptionHandler
         return $response->withContent(json_encode([
             'code' => $throwable->getCode(),
             'message' => $throwable->getMessage(),
+            'trace' => $throwable->getTrace(),
         ]));
     }
 }

@@ -16,7 +16,7 @@ class Connection
 {
 
 
-    protected null|PDO $dbh = null;
+    protected ?PDO $dbh = null;
 
     protected array $config = [];
 
