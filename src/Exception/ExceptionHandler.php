@@ -22,6 +22,9 @@ class ExceptionHandler
      */
     public function handle(Throwable $throwable, Response $response): Response
     {
-        return $response->withBody(json_encode(['code' => $throwable->getCode()]));
+        return $response->withContent(json_encode([
+            'code' => $throwable->getCode(),
+            'message' => $throwable->getMessage(),
+        ]));
     }
 }

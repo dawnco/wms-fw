@@ -24,19 +24,27 @@ class Fw
 
     public function run(): void
     {
-        $response = new  Response();
+        $response = null;
         try {
             $request = new Request();
             $this->route = new Route($request);
             $response = $this->exec($request);
-            $this->response($response);
+            if ($response instanceof Response) {
+                $this->response($response);
+            } else {
+                $this->response((new Response())->withContent(json_encode([
+                    'code' => 0,
+                    "message" => "",
+                    "data" => $response
+                ])));
+            }
         } catch (Throwable $e) {
             $handlerCls = Conf::get('app.exception.handler', ExceptionHandler::class);
             /**
              * @var  ExceptionHandler $handler
              */
             $handler = new $handlerCls();
-            $this->response($handler->handle($e, $response));
+            $this->response($handler->handle($e, $response ?: new Response()));
         }
     }
 
@@ -46,7 +54,8 @@ class Fw
         foreach ($response->getHeaders() as $k => $v) {
             header("$k:$v");
         }
-        header("Status:" . $response->getStatusCode());
+        header(sprintf('HTTP/1.1 %s %s', $response->getStatusCode(),
+            Response::getReasonPhraseByCode($response->getStatusCode())));
         echo $response->getBody();
     }
 
