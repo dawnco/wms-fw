@@ -6,6 +6,8 @@
 
 namespace Wms\Database;
 
+use Wms\Lib\Log;
+
 class Mysqli extends Database implements IDatabase
 {
     /**
@@ -50,7 +52,7 @@ class Mysqli extends Database implements IDatabase
      * 获取一行数据
      * @param string     $query
      * @param array|null $bind
-     * @return boolean
+     * @return array
      */
     public function getLine($query, $bind = null)
     {
@@ -489,8 +491,12 @@ class Mysqli extends Database implements IDatabase
 
     public function ping()
     {
-        if (!$this->link->ping()) {
+        try {
+            $this->link->ping();
+        } catch (\Throwable $e) {
+            Log::error("mysqli ping exception %s", $e);
             $this->connect();
+            Log::info("mysqli reconnect ok");
         }
     }
 }
