@@ -492,7 +492,13 @@ class Mysqli extends Database implements IDatabase
     public function ping()
     {
         try {
-            $this->link->ping();
+            $val = $this->link->ping();
+            if (!$val) {
+                Log::error("mysqli ping fail");
+                $this->connect();
+                Log::info("mysqli reconnect ok");
+                return;
+            }
         } catch (\Throwable $e) {
             Log::error("mysqli ping exception %s", $e);
             $this->connect();
