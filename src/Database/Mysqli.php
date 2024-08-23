@@ -44,7 +44,7 @@ class Mysqli extends Database implements IDatabase
         $this->link->set_charset($charset);
 
         if (isset($this->conf['timezone'])) {
-            $this->link->query(sprintf("SET time_zone '%s'", $this->conf['timezone']));
+            $this->link->query(sprintf("SET time_zone = '%s'", $this->conf['timezone']));
         }
     }
 
